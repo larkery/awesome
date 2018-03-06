@@ -15,6 +15,8 @@ local sharedtags = require("sharedtags")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+require("savefloats")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -74,24 +76,6 @@ local function client_menu_toggle_fn()
 end
 -- }}}
 
--- {{{ Menu
--- Create a launcher widget and a main menu
-myawesomemenu = {
-   { "hotkeys", function() return false, hotkeys_popup.show_help end},
-   { "manual", terminal .. " -e man awesome" },
-   { "edit config", editor_cmd .. " " .. awesome.conffile },
-   { "restart", awesome.restart },
-   { "quit", function() awesome.quit() end}
-}
-
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
-                                  }
-                        })
-
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
-
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
@@ -136,7 +120,6 @@ local tasklist_buttons = gears.table.join(
                                                   c:raise()
                                               end
                                           end),
-                     awful.button({ }, 3, client_menu_toggle_fn()),
                      awful.button({ }, 4, function ()
                                               awful.client.focus.byidx(1)
                                           end),
@@ -171,13 +154,19 @@ local tags = sharedtags({
       {layout = awful.layout.layouts[1]},
 })
 
-
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
-    set_wallpaper(s)
+      set_wallpaper(s)
 
     -- Each screen has its own tag table.
     --awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+
+    for _, tag in ipairs(tags) do
+       if not(tag.selected) then
+          sharedtags.viewonly(tag, s)
+          break
+       end
+    end
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -219,7 +208,6 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -248,8 +236,20 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ sup,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
+    awful.key({ sup,           }, "w", function () awful.spawn("firefox") end,
+              {description = "run firefox", group = "awesome"}),
+    awful.key({ sup,           }, "e", function () awful.spawn("emacsclient -c -n") end,
+       {description = "run firefox", group = "awesome"}),
+
+    awful.key({ sup }, "j",
+       function () awful.prompt.run({ prompt = "Tag: "}, mouse.screen.mypromptbox.widget,
+             function(nam)
+                local t = tags:add({ name = nam , screen = mouse.screen.index})
+                t:view_only()
+             end
+          )
+       end
+    ),
 
     -- Layout manipulation
     awful.key({ sup, "Shift"   }, "n", function () awful.client.swap.byidx(  1)    end,
@@ -311,7 +311,7 @@ globalkeys = gears.table.join(
     awful.key({ sup },            "r",     function () awful.screen.focused().mypromptbox:run() end,
               {description = "run prompt", group = "launcher"}),
 
-    awful.key({ sup }, "x",
+    awful.key({ sup , "Shift" }, "x",
               function ()
                   awful.prompt.run {
                     prompt       = "Run Lua code: ",
@@ -322,7 +322,7 @@ globalkeys = gears.table.join(
               end,
               {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
-    awful.key({ sup }, "p", function() menubar.show() end,
+    awful.key({ sup }, "x", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
 )
 
@@ -370,6 +370,7 @@ clientkeys = gears.table.join(
         {description = "(un)maximize horizontally", group = "client"})
 )
 
+-- TODO select nth nonempty tag
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
@@ -451,6 +452,7 @@ awful.rules.rules = {
         instance = {
           "DTA",  -- Firefox addon DownThemAll.
           "copyq",  -- Includes session name in class.
+          "pinentry-gtk-2",
         },
         class = {
           "Arandr",
@@ -476,6 +478,8 @@ awful.rules.rules = {
     { rule_any = {type = { "normal", "dialog" }
       }, properties = { titlebars_enabled = true }
     },
+
+    { rule_any = {instance = {"xclock"}}, properties = {titlebars_enabled = false, floating = true}}
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
@@ -552,33 +556,3 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-
-floatgeoms = {}
-
-forget_float = function(c) floatgeoms[c.window] = nil end
-
-store_floats = function(t)
-   for k, c in ipairs(t:clients()) do
-      if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or
-         (awful.client.floating.get(c) == true)) then
-         c:geometry(floatgeoms[c.window])
-      end
-      client.connect_signal("unmanage", forget_float)
-   end
-end
-
-tag.connect_signal( "property::layout", store_floats )
-
-client.connect_signal("property::geometry", function(c)
-    if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or (awful.client.floating.get(c) == true)) then
-        floatgeoms[c.window] = c:geometry()
-    end
-end)
-
-client.connect_signal("unmanage", function(c) floatgeoms[c.window] = nil end)
-
-client.connect_signal("manage", function(c)
-    if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or (awful.client.floating.get(c) == true)) then
-        floatgeoms[c.window] = c:geometry()
-    end
-end)

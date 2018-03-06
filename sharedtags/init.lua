@@ -89,23 +89,23 @@ end)
 -- -- tags[2] and tags["www"] both refer to the same tag.
 function sharedtags.new(def)
     local tags = {}
+    function tags:add(t)
+       local i = 1+#tags
+       local tg = awful.tag.add(t.name or i, {
+                                   screen = (t.screen and t.screen <= capi.screen.count())
+                                      and t.screen or capi.screen.primary,
+                                   layout = t.layout,
+                                   sharedtagindex = i
+       })
 
-    for i,t in ipairs(def) do
-        tags[i] = awful.tag.add(t.name or i, {
-            screen = (t.screen and t.screen <= capi.screen.count()) and t.screen or capi.screen.primary,
-            layout = t.layout,
-            sharedtagindex = i
-        })
-
-        -- Create an alias between the index and the name.
-        if t.name and type(t.name) ~= "number" then
-            tags[t.name] = tags[i]
-        end
-
-        -- If no tag is selected for this screen, then select this one.
-        if not tags[i].screen.selected_tag then
-            tags[i]:view_only() -- Updates the history as well.
-        end
+       tags[i] = tg
+       if not tags[i].screen.selected_tag then
+          tags[i]:view_only()
+       end
+       return tg
+    end
+    for _,t in ipairs(def) do
+       tags:add(t)
     end
 
     return tags
@@ -160,8 +160,19 @@ end
 -- @param tag The only tag to view.
 -- @tparam[opt=awful.screen.focused()] number screen The screen to view the tag on.
 function sharedtags.viewonly(tag, screen)
-   -- if we are moing the tag from a different screen
+   -- if we are moving the tag from a different screen
    -- we should also move the current tag on this screen over there
+   if tag.selected and tag.screen ~= screen then
+      local tags_here = screen.tags
+      local tags_there = tag.screen.tags
+
+      for i,t in ipairs(tags_here) do
+          if t.selected then
+             sharedtags.movetag(t, tag.screen)
+             t.selected = true
+          end
+      end
+   end
    sharedtags.movetag(tag, screen)
    tag:view_only()
 end
