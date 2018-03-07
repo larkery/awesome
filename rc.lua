@@ -453,7 +453,6 @@ client.connect_signal("mouse::enter", function(c)
     if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
         and awful.client.focus.filter(c) then
            client.focus = c
-           -- TODO raise on timer
     end
 end)
 

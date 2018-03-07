@@ -4,7 +4,7 @@ local window = nil
 local timer = gears.timer{ timeout = 0.2 }
 timer:connect_signal("timeout",
                      function ()
-                        if window then
+                        if window and client.focus == window then
                            window:raise()
                         end
                         timer:stop()
