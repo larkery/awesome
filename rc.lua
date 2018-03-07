@@ -47,7 +47,9 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-beautiful.useless_gap = 2;
+beautiful.useless_gap = 2
+beautiful.border_width = 2
+beautiful.border_focus = "#00AAEE"
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
@@ -156,6 +158,9 @@ local tags = sharedtags({
       {layout = awful.layout.layouts[1]},
 })
 
+local separator = wibox.widget.textbox()
+separator:set_text(" ")
+
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
       set_wallpaper(s)
@@ -195,9 +200,12 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Left widgets
            layout = wibox.layout.fixed.horizontal,
            s.mylayoutbox,
+           separator,
            s.mytaglist,
+           separator,
            s.mypromptbox,
         },
+
         s.mytasklist, -- Middle widget
         { -- Right widgets
            layout = wibox.layout.fixed.horizontal,
@@ -554,7 +562,29 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
+
+
+    local l = awful.layout.get(c.screen)
+    if not (l.name == "floating" or c.floating) then
+        awful.titlebar.hide(c)
+    end
 end)
+
+client.connect_signal("property::floating", function (c)
+    if c.floating then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+end)
+
+awful.tag.attached_connect_signal(s, "property::layout", function (t)
+    local float = t.layout.name == "floating"
+    for _,c in pairs(t:clients()) do
+        c.floating = float
+    end
+end)
+
 
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)

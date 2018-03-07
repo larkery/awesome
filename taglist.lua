@@ -199,7 +199,7 @@ taglist.filter = {}
 
 local instances = nil
 
-function taglist.taglist_label(t, args)
+function taglist.taglist_label(t, screen, args)
     if not args then args = {} end
     local theme = beautiful.get()
     local fg_focus = args.fg_focus or theme.taglist_fg_focus or theme.fg_focus
@@ -277,7 +277,7 @@ function taglist.taglist_label(t, args)
             end
         end
     end
-    if t.selected then
+    if t.selected and t.screen == screen then
         bg_color = bg_focus
         fg_color = fg_focus
 
@@ -359,7 +359,7 @@ local function taglist_update(all_tags, s, w, buttons, filter, data, style, upda
         end
     end
 
-    local function label(c) return taglist.taglist_label(c, style) end
+    local function label(c) return taglist.taglist_label(c, s, style) end
 
     update_function(w, buttons, label, data, tags)
 end

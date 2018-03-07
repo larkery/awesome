@@ -163,15 +163,9 @@ function sharedtags.viewonly(tag, screen)
    -- if we are moving the tag from a different screen
    -- we should also move the current tag on this screen over there
    if tag.selected and tag.screen ~= screen then
-      local tags_here = screen.tags
-      local tags_there = tag.screen.tags
-
-      for i,t in ipairs(tags_here) do
-          if t.selected then
-             sharedtags.movetag(t, tag.screen)
-             t.selected = true
-          end
-      end
+      local swap = screen.selected_tag
+      sharedtags.movetag(swap, tag.screen)
+      swap:view_only()
    end
    sharedtags.movetag(tag, screen)
    tag:view_only()
