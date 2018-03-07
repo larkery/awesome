@@ -49,7 +49,7 @@ end
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 2
 beautiful.border_width = 2
-beautiful.border_focus = "#00AAEE"
+beautiful.border_focus = "#ff0000"
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
@@ -566,15 +566,18 @@ client.connect_signal("request::titlebars", function(c)
 
     local l = awful.layout.get(c.screen)
     if not (l.name == "floating" or c.floating) then
-        awful.titlebar.hide(c)
+       awful.titlebar.hide(c)
+       c.border_width = 0
     end
 end)
 
 client.connect_signal("property::floating", function (c)
     if c.floating then
-        awful.titlebar.show(c)
+       awful.titlebar.show(c)
+       c.border_width = 0
     else
-        awful.titlebar.hide(c)
+       awful.titlebar.hide(c)
+       c.border_width = beautiful.border_width
     end
 end)
 
