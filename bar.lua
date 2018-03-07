@@ -18,7 +18,7 @@ function bar:create(s, tags)
    })
 
    local taglist = taglist(
-      tags, s, awful.widget.taglist.filter.noempty,
+      tags, s, awful.widget.taglist.filter.all,
       taglist_buttons
    )
 

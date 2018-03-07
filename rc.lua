@@ -132,12 +132,18 @@ globalkeys = gears.table.join(
        {description = "run firefox", group = "awesome"}),
 
     awful.key({ sup }, "j",
-       function () awful.prompt.run({ prompt = "Tag: "}, mouse.screen.prompt.widget,
-             function(nam)
-                local t = tags:add({ name = nam , screen = mouse.screen.index})
-                t:view_only()
-             end
-          )
+       function ()
+          awful.prompt.run {
+             prompt = "<b>Tag: </b>",
+             textbox = mouse.screen.prompt.widget,
+             hooks = {
+                {{}, 'Return',
+                   function (t)
+                      tags:add({name = t, screen = mouse.screen.index}):view_only()
+                   end
+                },
+             }
+          }
        end
     ),
 
@@ -280,7 +286,7 @@ for i = 1, 9 do
         awful.key({ sup }, "#" .. i + 9,
                   function ()
                         local screen = awful.screen.focused()
-                        local tag = nth_tag(i)
+                        local tag = tags[i]
                         if tag then
                            sharedtags.viewonly(tag, screen)
                         end
@@ -290,7 +296,7 @@ for i = 1, 9 do
         awful.key({ sup, "Control" }, "#" .. i + 9,
                   function ()
                       local screen = awful.screen.focused()
-                      local tag = nth_tag(i)
+                      local tag = tags[i]
                       if tag then
                          sharedtags.viewtoggle(tag)
                       end
@@ -300,7 +306,7 @@ for i = 1, 9 do
         awful.key({ sup, "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = nth_tag(i)
+                          local tag = tags[i]
                           if tag then
                               client.focus:move_to_tag(tag)
                           end
@@ -311,7 +317,7 @@ for i = 1, 9 do
         awful.key({ sup, "Control", "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = nth_tag(i)
+                          local tag = tags[i]
                           if tag then
                               client.focus:toggle_tag(tag)
                           end
