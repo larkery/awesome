@@ -107,7 +107,18 @@ function sharedtags.new(def)
     for _,t in ipairs(def) do
        tags:add(t)
     end
-
+    function tags:view(i)
+       local tag = tags[i]
+       if tag then
+          sharedtags.viewonly(tag, awful.screen.focused())
+       end
+    end
+    function tags:shift_focused(i)
+       local tag = tags[i]
+       if tag and client.focus then
+          client.focus:move_to_tag(tag)
+       end
+    end
     return tags
 end
 

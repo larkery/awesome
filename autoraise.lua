@@ -1,3 +1,4 @@
+local awful = require("awful")
 local gears = require("gears")
 
 local window = nil
@@ -13,6 +14,10 @@ timer:connect_signal("timeout",
 
 client.connect_signal("mouse::enter",
                       function (c)
+                         if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+                         and awful.client.focus.filter(c) then
+                            client.focus = c
+                         end
                          window = c
                          timer:again()
                       end

@@ -1,11 +1,17 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local taglist = require("taglist")
+local gears = require("gears")
+local util = require("util")
 
 local bar = { }
 local clock = wibox.widget.textclock()
 local taglist_buttons = { }
-local tasklist_buttons = { }
+
+
+local tasklist_buttons = gears.table.join(
+   awful.button({}, 1, util.minimize)
+)
 
 local separator = wibox.widget.textbox()
 
@@ -27,7 +33,10 @@ function bar:create(s, tags)
 
    local layoutbox = awful.widget.layoutbox(s)
    layoutbox:buttons(
-      { }
+      gears.table.join(
+         awful.button({}, 1, util.next_layout),
+         awful.button({}, 3, util.prev_layout)
+      )
    )
 
    local tasklist = awful.widget.tasklist(
@@ -47,6 +56,7 @@ function bar:create(s, tags)
          },
          tasklist,
          { layout = wibox.layout.fixed.horizontal,
+           separator,
            wibox.widget.systray(),
            clock
          }
