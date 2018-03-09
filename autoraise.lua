@@ -18,8 +18,13 @@ client.connect_signal("mouse::enter",
                          and awful.client.focus.filter(c) then
                             client.focus = c
                          end
-                         window = c
-                         timer:again()
+                         if (awful.layout.get(c.screen) == awful.layout.suit.floating) or client.floating then
+                            window = c
+                            timer:again()
+                         else
+                            window = nil
+                            c:raise()
+                         end
                       end
 )
 

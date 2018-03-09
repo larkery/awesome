@@ -25,7 +25,6 @@ function keys:define_global(tags)
       key({M,S}, "n", util.swap_next, {description = "swap next", group = "window"}),
       key({M,S}, "p", util.swap_prev, {description = "swap prev", group = "window"}),
       key({M},   "o", util.next_screen, {description = "focus next", group = "screen"}),
-      key({M,S}, "o", util.next_screen, {description = "-> next screen", group = "window"}),
 
       key({M, S}, "Return", util.spawn("urxvt"), {description = "terminal", group = "spawn"})
    )
@@ -47,7 +46,9 @@ function keys:define_client()
       key({M}, "k",     function(c) c:kill() end, {description = "close", group="client"}),
       key({M}, "space", awful.client.floating.toggle, {description = "toggle floating", group="client"}),
       key({M}, "z",     util.minimize, {description = "minimize", group="client"}),
+      key({M,S}, "o", util.shift_next_screen, {description = "-> next screen", group = "window"}),
       key({M}, "Return", function(c) c:swap(awful.client.getmaster()) end, {description="swap master", group="client"})
+
    )
 end
 

@@ -111,7 +111,12 @@ awful.rules.rules = {
       }, properties = { titlebars_enabled = true }
     },
 
-    { rule_any = {instance = {"xclock"}}, properties = {titlebars_enabled = false, floating = true}}
+    { rule_any = {instance = {"xclock"}}, properties = {
+         titlebars_enabled = false,
+         floating = true,
+         sticky=true,
+         opacity = 0.7
+    }}
 
 }
 
@@ -176,6 +181,7 @@ require("autoraise")
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("property::floating", function(c) c.ontop = c.floating end)
 
 awesome.connect_signal(
    "screen::change",
@@ -184,5 +190,4 @@ awesome.connect_signal(
          awful.spawn("autorandr -c")
       end
    end
-
 )
