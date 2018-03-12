@@ -25,6 +25,22 @@ function keys:define_global(tags)
       key({M,S}, "n", util.swap_next, {description = "swap next", group = "window"}),
       key({M,S}, "p", util.swap_prev, {description = "swap prev", group = "window"}),
       key({M},   "o", util.next_screen, {description = "focus next", group = "screen"}),
+      key({M},   "space", util.next_layout, {description = "focus next", group = "screen"}),
+      key({M,S}, "space", util.prev_layout, {description = "focus next", group = "screen"}),
+      key({M},    ",", util.fewer_masters),
+      key({M},    ".", util.more_masters),
+
+      key({M, A},  ",", util.fewer_cols),
+      key({M, A},  ".", util.more_cols),
+
+      key({M},     "BackSpace", function () tags:delete(awful.screen.focused().selected_tag) end),
+
+      key({}, "XF86MonBrightnessDown", util.brightness(-10)),
+      key({}, "XF86MonBrightnessUp", util.brightness(10)),
+      key({}, "XF86Launch1", util.exec("touchpad")),
+      key({}, "XF86AudioRaiseVolume", util.volume(10)),
+      key({}, "XF86AudioLowerVolume", util.volume(-10)),
+      key({}, "XF86AudioMute", util.mute),
 
       key({M, S}, "Return", util.spawn("urxvt"), {description = "terminal", group = "spawn"})
    )
@@ -43,12 +59,20 @@ end
 
 function keys:define_client()
    return gears.table.join(
-      key({M}, "k",     function(c) c:kill() end, {description = "close", group="client"}),
-      key({M}, "space", awful.client.floating.toggle, {description = "toggle floating", group="client"}),
+      key({M}, "k",     util.kill, {description = "close", group="client"}),
+      key({M}, "t",
+         function(c)
+            awful.client.floating.toggle(c)
+            c.ontop = c.floating
+         end
+         , {description = "toggle floating", group="client"}),
       key({M}, "z",     util.minimize, {description = "minimize", group="client"}),
       key({M,S}, "o", util.shift_next_screen, {description = "-> next screen", group = "window"}),
-      key({M}, "Return", function(c) c:swap(awful.client.getmaster()) end, {description="swap master", group="client"})
 
+      key({M}, "f", util.full_toggle, {description = "fullscreen", group="window"}),
+      key({M}, "m", util.max_toggle, {description = "maximize", group="window"}),
+
+      key({M}, "Return", function(c) c:swap(awful.client.getmaster()) end, {description="swap master", group="client"})
    )
 end
 

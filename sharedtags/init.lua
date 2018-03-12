@@ -88,38 +88,78 @@ end)
 --   {})
 -- -- tags[2] and tags["www"] both refer to the same tag.
 function sharedtags.new(def)
-    local tags = {}
-    function tags:add(t)
-       local i = 1+#tags
-       local tg = awful.tag.add(t.name or i, {
-                                   screen = (t.screen and t.screen <= capi.screen.count())
-                                      and t.screen or capi.screen.primary,
-                                   layout = t.layout,
-                                   sharedtagindex = i
-       })
+   local tags = {}
 
-       tags[i] = tg
-       if not tags[i].screen.selected_tag then
-          tags[i]:view_only()
-       end
-       return tg
-    end
-    for _,t in ipairs(def) do
-       tags:add(t)
-    end
-    function tags:view(i)
-       local tag = tags[i]
-       if tag then
-          sharedtags.viewonly(tag, awful.screen.focused())
-       end
-    end
-    function tags:shift_focused(i)
-       local tag = tags[i]
-       if tag and client.focus then
-          client.focus:move_to_tag(tag)
-       end
-    end
-    return tags
+   -- TODO sort out numbering and persistence
+
+   function tags:add(t)
+      local t = t or {}
+      local i = 1+#tags
+      local tg = awful.tag.add(
+         t.name or i,
+         {
+            gap_single_client = false,
+            screen = (t.screen and t.screen <= capi.screen.count())
+               and t.screen or capi.screen.primary,
+            layout = t.layout or awful.layout.layouts[1],
+            sharedtagindex = i,
+            selected = false
+      })
+
+      tags[i] = tg
+      if not tags[i].screen.selected_tag then
+         tags[i]:view_only()
+      end
+      return tg
+   end
+   for _,t in ipairs(def) do
+      tags:add(t)
+   end
+   function tags:with(i, cb)
+      local tag = tags[i]
+      if not tag then
+         awful.prompt.run(
+            {
+               prompt = "<b>Tag: </b>",
+               text = ""..i
+            },
+            awful.screen.focused().prompt.widget,
+            function (t)
+               cb(tags:add({name = t}))
+            end
+         )
+      else
+         cb(tag)
+      end
+   end
+   function tags:delete(tag)
+      local ix = tag.sharedtagindex
+      if tag and tag:delete() then
+         if ix then
+            table.remove(tags, ix)
+         end
+      end
+   end
+   function tags:view(i)
+      tags:with(i,
+                function (tag)
+                   sharedtags.viewonly(tag, awful.screen.focused())
+                end
+      )
+   end
+   function tags:shift_focused(i)
+      local f = client.focus
+      if f then
+         tags:with(
+            i,
+            function (tag)
+               f:move_to_tag(tag)
+            end
+         )
+      end
+   end
+
+   return tags
 end
 
 --- Move the specified tag to a new screen, if necessary.

@@ -204,12 +204,17 @@ function taglist.taglist_label(t, screen, args)
     local theme = beautiful.get()
     local fg_focus = args.fg_focus or theme.taglist_fg_focus or theme.fg_focus
     local bg_focus = args.bg_focus or theme.taglist_bg_focus or theme.bg_focus
+
     local fg_urgent = args.fg_urgent or theme.taglist_fg_urgent or theme.fg_urgent
     local bg_urgent = args.bg_urgent or theme.taglist_bg_urgent or theme.bg_urgent
     local bg_occupied = args.bg_occupied or theme.taglist_bg_occupied
     local fg_occupied = args.fg_occupied or theme.taglist_fg_occupied
     local bg_empty = args.bg_empty or theme.taglist_bg_empty
     local fg_empty = args.fg_empty or theme.taglist_fg_empty
+
+    local fg_vis = args.fg_vis or theme.taglist_fg_vis or theme.fg_vis or fg_empty
+    local bg_vis = args.bg_vis or theme.taglist_bg_vis or theme.bg_vis or bg_empty
+
     local bg_volatile = args.bg_volatile or theme.taglist_bg_volatile
     local fg_volatile = args.fg_volatile or theme.taglist_fg_volatile
     local taglist_squares_sel = args.squares_sel or theme.taglist_squares_sel
@@ -292,7 +297,21 @@ function taglist.taglist_label(t, screen, args)
         if args.shape_border_color_focus or theme.taglist_shape_border_color_focus then
             shape_border_color = args.shape_border_color_focus or theme.taglist_shape_border_color_focus
         end
+    elseif t.selected then
+       bg_color = bg_vis
+       fg_color = fg_vis
 
+       if args.shape_focus or theme.taglist_shape_focus then
+          shape = args.shape_focus or theme.taglist_shape_focus
+       end
+
+       if args.shape_border_width_focus or theme.taglist_shape_border_width_focus then
+          shape_border_width = args.shape_border_width_focus or theme.taglist_shape_border_width_focus
+       end
+
+       if args.shape_border_color_focus or theme.taglist_shape_border_color_focus then
+          shape_border_color = args.shape_border_color_focus or theme.taglist_shape_border_color_focus
+       end
     elseif tag.getproperty(t, "urgent") then
         if bg_urgent then bg_color = bg_urgent end
         if fg_urgent then fg_color = fg_urgent end
