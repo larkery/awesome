@@ -28,6 +28,7 @@ local batteryarc = wibox.widget {
     bg = "#ffffff11",
     paddings = 2,
     widget = wibox.container.arcchart,
+    value = 1,
     set_value = function(self, value)
         self.value = value
     end,
