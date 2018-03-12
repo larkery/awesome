@@ -87,14 +87,22 @@ end)
 --   -- Third tag is named "3" on screen 1 with the floating layout.
 --   {})
 -- -- tags[2] and tags["www"] both refer to the same tag.
+
+local deltag = awful.tag.object.delete
+awful.tag.object.delete = function(t)
+   if t.sharedtags and t.sharedtagindex then
+      table.remove(t.sharedtags, t.sharedtagindex)
+   end
+   deltag(t)
+end
+
 function sharedtags.new(def)
    local tags = {}
-
-   -- TODO sort out numbering and persistence
 
    function tags:add(t)
       local t = t or {}
       local i = 1+#tags
+
       local tg = awful.tag.add(
          t.name or i,
          {
@@ -103,18 +111,31 @@ function sharedtags.new(def)
                and t.screen or capi.screen.primary,
             layout = t.layout or awful.layout.layouts[1],
             sharedtagindex = i,
+            sharedtags = tags,
             selected = false
       })
 
       tags[i] = tg
+
       if not tags[i].screen.selected_tag then
          tags[i]:view_only()
       end
+
+      tg:connect_signal("property::selected",
+                        function (t)
+                           if t.volatile and #t.clients() == 0 and not t.selected then
+                              t:delete()
+                           end
+                        end
+      )
+
       return tg
    end
+
    for _,t in ipairs(def) do
       tags:add(t)
    end
+
    function tags:with(i, cb)
       local tag = tags[i]
       if not tag then
@@ -132,14 +153,11 @@ function sharedtags.new(def)
          cb(tag)
       end
    end
+
    function tags:delete(tag)
-      local ix = tag.sharedtagindex
-      if tag and tag:delete() then
-         if ix then
-            table.remove(tags, ix)
-         end
-      end
+      if tag then tag:delete() end
    end
+
    function tags:view(i)
       tags:with(i,
                 function (tag)
@@ -147,6 +165,7 @@ function sharedtags.new(def)
                 end
       )
    end
+
    function tags:shift_focused(i)
       local f = client.focus
       if f then

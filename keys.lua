@@ -33,7 +33,7 @@ function keys:define_global(tags)
       key({M, A},  ",", util.fewer_cols),
       key({M, A},  ".", util.more_cols),
 
-      key({M},     "BackSpace", function () tags:delete(awful.screen.focused().selected_tag) end),
+      key({M},     "BackSpace", function () awful.screen.focused().selected_tag:delete() end),
 
       key({}, "XF86MonBrightnessDown", util.brightness(-10)),
       key({}, "XF86MonBrightnessUp", util.brightness(10)),
