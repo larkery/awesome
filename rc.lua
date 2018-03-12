@@ -13,7 +13,7 @@ naughty.config.defaults.opacity = 0.8
 require("handle_errors")
 
 -- my things
-local sharedtags = require("sharedtags")
+local xtags = require("xtags")
 local taglist = require("taglist")
 local keys = require("keys")
 local bar = require("bar")
@@ -27,9 +27,6 @@ editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") 
 menubar.utils.terminal = terminal
 
 awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, awful.layout.suit.max, awful.layout.suit.floating, }
-local tags = sharedtags({
-
-})
 
 local function set_wallpaper(s)
    gears.wallpaper.set("#333")
@@ -39,22 +36,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
       set_wallpaper(s)
-
-      if not s.selected_tag then
-         local needs_tag = true
-         for _, tag in ipairs(tags) do
-            if not(tag.selected) then
-               sharedtags.viewonly(tag, s)
-               needs_tag = false
-               break
-            end
-         end
-         if needs_tag then
-            sharedtags.viewonly(tags:add(), s)
-         end
-      end
-
-      bar:create(s, tags)
+      bar:create(s)
 end)
 
 root.buttons(gears.table.join(
@@ -62,7 +44,7 @@ root.buttons(gears.table.join(
     awful.button({ }, 5, awful.tag.viewprev)
 ))
 
-root.keys(keys:define_global(tags))
+root.keys(keys:define_global())
 
 local clientkeys = keys:define_client()
 

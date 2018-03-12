@@ -40,7 +40,7 @@ local function menu (s)
    return boxmenu
 end
 
-function bar:create(s, tags)
+function bar:create(s)
    local boxmenu = menu(s)
 
    local mywibox = awful.wibar({
@@ -49,7 +49,6 @@ function bar:create(s, tags)
    })
 
    local taglist = taglist(
-      tags,
       s,
       awful.widget.taglist.filter.all,
       taglist_buttons,

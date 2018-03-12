@@ -1,6 +1,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local util = require("util")
+local xtags = require("xtags")
 
 local M = "Mod4"
 local C = "Control"
@@ -10,7 +11,7 @@ local S = "Shift"
 local keys = { M = M, C = C , A = A}
 local key = awful.key
 
-function keys:define_global(tags)
+function keys:define_global()
    local ks = gears.table.join(
       key({M, C}, "r", awesome.restart, {description = "restart awesome", group = "session"}),
 
@@ -49,8 +50,8 @@ function keys:define_global(tags)
       local code = "#" .. (i+9)
       ks = gears.table.join(
          ks,
-         key({M},    code, function () tags:view(i) end, {description = "view " .. i, group = "tags"}),
-         key({M, S}, code, function () tags:shift_focused(i) end, {description = "view " .. i, group = "tags"})
+         key({M},    code, function () xtags.nth(i):greedy_view() end, {description = "view " .. i, group = "tags"}),
+         key({M, S}, code, function () awful.client.movetotag(xtags.nth(i)) end, {description = "view " .. i, group = "tags"})
       )
    end
 

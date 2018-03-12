@@ -22,6 +22,7 @@ local surface = require("gears.surface")
 local timer = require("gears.timer")
 local gcolor = require("gears.color")
 local gstring = require("gears.string")
+local xtags = require("xtags")
 
 local function get_screen(s)
     return s and capi.screen[s]
@@ -370,9 +371,9 @@ function taglist.taglist_label(t, screen, args)
     return text, bg_color, bg_image, not taglist_disable_icon and icon or nil, other_args
 end
 
-local function taglist_update(all_tags, s, w, buttons, filter, data, style, update_function)
+local function taglist_update(s, w, buttons, filter, data, style, update_function)
     local tags = {}
-    for _, t in ipairs(all_tags) do
+    for _, t in ipairs(xtags.all_tags) do
         if not tag.getproperty(t, "hide") and filter(t) then
             table.insert(tags, t)
         end
@@ -426,7 +427,7 @@ end
 -- @param[opt] base_widget.squares_resize True or false to resize squares.
 -- @param base_widget.font The font.
 -- @function awful.taglist
-function taglist.new(tags, screen, filter, buttons, style, update_function, base_widget)
+function taglist.new(screen, filter, buttons, style, update_function, base_widget)
     screen = get_screen(screen)
     local uf = update_function or common.list_update
     local w = base_widget or fixed.horizontal()
@@ -443,7 +444,7 @@ function taglist.new(tags, screen, filter, buttons, style, update_function, base
         if not queued_update[screen] then
             timer.delayed_call(function()
                 if screen.valid then
-                    taglist_update(tags, screen, w, buttons, filter, data, style, uf)
+                    taglist_update(screen, w, buttons, filter, data, style, uf)
                 end
                 queued_update[screen] = false
             end)
