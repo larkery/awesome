@@ -53,7 +53,7 @@ function bar:create(s)
       awful.widget.taglist.filter.all,
       taglist_buttons,
       { bg_vis = beautiful.bg_focus, fg_vis=beautiful.fg_focus,
-        bg_focus = "#53868b", show_index = true
+        bg_focus = "#376", show_index = true
 
       }
    )
