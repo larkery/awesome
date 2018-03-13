@@ -3,7 +3,7 @@ local wibox = require("wibox")
 local taglist = require("taglist")
 local gears = require("gears")
 local util = require("util")
-local batt = require("batteryarc")
+--local batt = require("batteryarc")
 local beautiful = require("beautiful")
 
 local bar = { }
@@ -53,7 +53,7 @@ function bar:create(s)
       awful.widget.taglist.filter.all,
       taglist_buttons,
       { bg_vis = beautiful.bg_focus, fg_vis=beautiful.fg_focus,
-        bg_focus = "#53868b"
+        bg_focus = "#53868b", show_index = true
 
       }
    )
@@ -89,7 +89,7 @@ function bar:create(s)
            separator,
            wibox.widget.systray(),
            separator,
-           batt,
+--           batt,
            separator,
            clock
          }

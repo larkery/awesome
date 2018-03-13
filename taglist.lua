@@ -216,6 +216,8 @@ function taglist.taglist_label(t, screen, args)
     local fg_vis = args.fg_vis or theme.taglist_fg_vis or theme.fg_vis or fg_empty
     local bg_vis = args.bg_vis or theme.taglist_bg_vis or theme.bg_vis or bg_empty
 
+    local show_index = args.show_index
+
     local bg_volatile = args.bg_volatile or theme.taglist_bg_volatile
     local fg_volatile = args.fg_volatile or theme.taglist_fg_volatile
     local taglist_squares_sel = args.squares_sel or theme.taglist_squares_sel
@@ -347,12 +349,15 @@ function taglist.taglist_label(t, screen, args)
     end
 
     if not tag.getproperty(t, "icon_only") then
-        text = "<span font_desc='"..font.."'>"
+       text = "<span font_desc='"..font.."'>"
+       local name = ((t.name == tostring(t.xtag_index) or not show_index) and t.name) or
+          (tostring(t.xtag_index) .. "." .. t.name)
+
         if fg_color then
             text = text .. "<span color='" .. gcolor.ensure_pango_color(fg_color) ..
-                "'>" .. (gstring.xml_escape(t.name) or "") .. "</span>"
+                "'>" .. (gstring.xml_escape(name) or "") .. "</span>"
         else
-            text = text .. (gstring.xml_escape(t.name) or "")
+            text = text .. (gstring.xml_escape(name) or "")
         end
         text = text .. "</span>"
     end
@@ -454,12 +459,11 @@ function taglist.new(screen, filter, buttons, style, update_function, base_widge
     if instances == nil then
         instances = setmetatable({}, { __mode = "k" })
         local function u(s)
-            local i = instances[get_screen(s)]
-            if i then
-                for _, tlist in pairs(i) do
-                    tlist._do_taglist_update()
-                end
-            end
+           for _, instances in pairs(instances) do
+              for _, tlist in pairs(instances) do
+                 tlist._do_taglist_update()
+              end
+           end
         end
         local uc = function (c) return u(c.screen) end
         local ut = function (t) return u(t.screen) end

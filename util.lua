@@ -1,4 +1,6 @@
 local awful = require("awful")
+local xtags = require("xtags")
+local capi = {screen = screen}
 
 local util = {}
 
@@ -66,5 +68,33 @@ function util.volume (delta)
 end
 
 util.mute = util.exec("pamixer -t")
+
+function util.rename_tag ()
+   local screen = awful.screen.focused()
+   local tag = screen.selected_tag
+   awful.prompt.run {
+      prompt = "<b>Tag: </b>",
+      textbox = screen.prompt.widget,
+      hooks = {
+         {{}, 'Return', function (t) tag.name = t end},
+         {{"Shift"}, 'Return',
+            function (t)
+               client.focus:move_to_tag(xtags.named(t))
+            end
+         }
+      }
+   }
+end
+
+function util.shift_new_tag ()
+   client.focus:move_to_tag(xtags.new_tag())
+end
+
+function util.rotate_screens ()
+   local n = capi.screen:count()
+   for i=1,n-1 do
+      xtags.swap_screens(capi.screen[i], capi.screen[i+1])
+   end
+end
 
 return util

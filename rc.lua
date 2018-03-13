@@ -1,5 +1,9 @@
 local gears = require("gears")
 local awful = require("awful")
+local tags_state_file = awful.util.getdir("cache") .. "/persist-tags"
+
+awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, awful.layout.suit.max, awful.layout.suit.floating, }
+
 require("awful.autofocus")
 local beautiful = require("beautiful")
 local menubar = require("menubar")
@@ -14,6 +18,9 @@ require("handle_errors")
 
 -- my things
 local xtags = require("xtags")
+
+xtags.load_from(tags_state_file)
+
 local taglist = require("taglist")
 local keys = require("keys")
 local bar = require("bar")
@@ -26,10 +33,9 @@ terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
 menubar.utils.terminal = terminal
 
-awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, awful.layout.suit.max, awful.layout.suit.floating, }
 
 local function set_wallpaper(s)
-   gears.wallpaper.set("#333")
+   gears.wallpaper.set("#376")
 end
 
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -175,5 +181,13 @@ awesome.connect_signal(
       if state == "Connected" or state == "Disconnected" then
          awful.spawn("autorandr -c", false)
       end
+   end
+)
+
+
+awesome.connect_signal(
+   "exit",
+   function (restart)
+      xtags.save_to(tags_state_file)
    end
 )
