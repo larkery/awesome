@@ -35,7 +35,12 @@ menubar.utils.terminal = terminal
 
 
 local function set_wallpaper(s)
-   gears.wallpaper.set("#376")
+   gears.wallpaper.set {
+      type = "linear",
+      from = {s.geometry.x, s.geometry.y},
+      to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
+      stops = {{0, "#376"}, {1, "#345"}}
+   }
 end
 
 screen.connect_signal("property::geometry", set_wallpaper)
