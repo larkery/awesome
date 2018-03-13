@@ -39,7 +39,7 @@ local function set_wallpaper(s)
       type = "linear",
       from = {s.geometry.x, s.geometry.y},
       to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
-      stops = {{0, "#376"}, {1, "#345"}}
+      stops = {{0, "#736"}, {1, "#534"}}
    }
 end
 
