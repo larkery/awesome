@@ -97,4 +97,22 @@ function util.rotate_screens ()
    end
 end
 
+function util.prev_tag ()
+   local cur = awful.screen.focused().selected_tag.xtag_index
+   cur = cur - 1
+   if cur == 0 then
+      cur = #xtags.all_tags
+   end
+   xtags.nth(cur):greedy_view()
+end
+
+function util.next_tag ()
+   local cur = awful.screen.focused().selected_tag.xtag_index
+   cur = cur + 1
+   if cur > #xtags.all_tags then
+      cur = 1
+   end
+   xtags.nth(cur):greedy_view()
+end
+
 return util

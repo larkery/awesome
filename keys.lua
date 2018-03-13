@@ -34,6 +34,8 @@ function keys:define_global()
 
       key({M, A},  ",", util.fewer_cols),
       key({M, A},  ".", util.more_cols),
+      key({M, S},  ",", util.prev_tag),
+      key({M, S},  ".", util.next_tag),
 
       key({M},     "BackSpace", function () awful.screen.focused().selected_tag:delete() end),
 
