@@ -60,6 +60,7 @@ function bar:create(s)
 
    local promptbox = awful.widget.prompt()
    s.prompt = promptbox
+   s.menu = boxmenu
 
    local layoutbox = awful.widget.layoutbox(s)
    layoutbox:buttons(
