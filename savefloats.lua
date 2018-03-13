@@ -1,31 +1,47 @@
 local awful = require("awful")
 
-floatgeoms = {}
+local function rel(screen, win)
+   return {
+      x = (win.x - screen.x) / screen.width,
+      y = (win.y - screen.y) / screen.height,
+      width = win.width / screen.width,
+      aspect = win.height / win.width
+   }
+end
 
-forget_float = function(c) floatgeoms[c.window] = nil end
+local function unrel(s, rel)
+   return rel and
+      {
+         x = s.x + s.width * rel.x,
+         y = s.y + s.height * rel.y,
+         width = s.width * rel.width,
+         height = rel.aspect * s.width * rel.width
+      }
+end
 
-store_floats = function(t)
-   for k, c in ipairs(t:clients()) do
-      if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or
-         (awful.client.floating.get(c) == true)) then
-         c:geometry(floatgeoms[c.window])
-      end
-      client.connect_signal("unmanage", forget_float)
+local stored = { }
+
+local function forget(c) stored[c] = nil end
+
+local floating = awful.layout.suit.floating
+
+function remember (c)
+   if floating == awful.layout.get(c.screen) or c.floating then
+      stored[c.window] = rel(c.screen.geometry, c:geometry())
    end
 end
 
-tag.connect_signal( "property::layout", store_floats )
+client.connect_signal( "manage", remember )
+client.connect_signal( "property::geometry", remember )
+client.connect_signal( "unmanage", forget )
 
-client.connect_signal("property::geometry", function(c)
-    if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or (awful.client.floating.get(c) == true)) then
-        floatgeoms[c.window] = c:geometry()
-    end
-end)
-
-client.connect_signal("unmanage", function(c) floatgeoms[c.window] = nil end)
-
-client.connect_signal("manage", function(c)
-    if ((awful.layout.get(mouse.screen) == awful.layout.suit.floating) or (awful.client.floating.get(c) == true)) then
-        floatgeoms[c.window] = c:geometry()
-    end
-end)
+tag.connect_signal(
+   "property::layout",
+   function (t)
+      if floating == awful.layout.get(t.screen) then
+         for _, c in ipairs(t:clients()) do
+            c:geometry(unrel(t.screen.geometry, stored[c.window]))
+         end
+      end
+   end
+)
