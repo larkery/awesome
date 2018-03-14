@@ -50,6 +50,8 @@ function bar:create(s)
    local boxmenu = menu(s)
 
    local mywibox = awful.wibar({
+         border_width = 1,
+         border_color = "#333333",
          position = "bottom",
          screen = s
    })
