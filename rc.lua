@@ -50,11 +50,12 @@ menubar.utils.terminal = terminal
 local function set_wallpaper(s)
    gears.wallpaper.set {
       type = "linear",
-      from = {s.geometry.x, s.geometry.y},
-      to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
+      from = {s.geometry.x, s.geometry.y + s.geometry.height/2},
+      to = {s.geometry.x + s.geometry.width, s.geometry.y},
       stops = {
-         {0, color.lighten(main_color, 0.1)},
-         {1, color.lighten(main_color, -0.3)}}
+         {0, color.lighten(main_color, -0.01)},
+         {0.4, color.lighten(main_color, -0.05)},
+         {1, color.lighten(main_color, -0.15)}}
    }
 end
 
