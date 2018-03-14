@@ -116,7 +116,7 @@ function util.next_tag ()
 end
 
 function util.go_urgent ()
-   awful.urgent.jumpto(true)
+   awful.client.urgent.jumpto(true)
 end
 
 return util

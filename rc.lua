@@ -36,6 +36,7 @@ beautiful.fg_visible = "#FFFFFF"
 beautiful.bg_focus = beautiful.titlebar_bg_focus
 beautiful.fg_focus = "#FFFFFF"
 
+
 beautiful.border_width = 2
 
 terminal = "urxvt"
@@ -48,7 +49,7 @@ local function set_wallpaper(s)
       type = "linear",
       from = {s.geometry.x, s.geometry.y},
       to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
-      stops = {{0, "#704560"}, {1, "#434"}}
+      stops = {{0, "#704560"}, {1, "#323"}}
    }
 end
 

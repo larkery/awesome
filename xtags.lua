@@ -199,38 +199,41 @@ function xtags.load_from (file)
    local f = io.open(file, "r")
    if f then
       f:close()
-      local n = 1
-      local layouts = {}
-      for _, l in ipairs(awful.layout.layouts) do
-         layouts[awful.layout.getname(l)] = l
-      end
-
-      local clients_by_win = {}
-      for _, c in ipairs(client.get()) do
-         c:tags({})
-         clients_by_win[window] = c
-      end
-
-      local screen_order = order_screens()
-
-      for line in io.lines(file) do
-         local cols = gears.string.split(line, "\t")
-         local tag_n = xtags.nth(n)
-
-         tag_n.name = cols[1]
-         tag_n.layout = layouts[cols[2]] or awful.layout.layouts[1]
-         tag_n.screen = screen_order[tonumber(cols[3])].screen or capi.screen[1]
-         tag_n.selected = cols[4] == "true"
-
-         for _, client in ipairs(gears.string.split(cols[5], ",")) do
-            local c = clients_by_win[tonumber(client)]
-            if c then
-               c:toggle_tag(tag_n)
+      pcall(function()
+            local n = 1
+            local layouts = {}
+            for _, l in ipairs(awful.layout.layouts) do
+               layouts[awful.layout.getname(l)] = l
             end
-         end
 
-         n = n + 1
-      end
+            local clients_by_win = {}
+            for _, c in ipairs(client.get()) do
+               c:tags({})
+               clients_by_win[window] = c
+            end
+
+            local screen_order = order_screens()
+
+            for line in io.lines(file) do
+               local cols = gears.string.split(line, "\t")
+               local tag_n = xtags.nth(n)
+
+               tag_n.name = cols[1]
+               tag_n.layout = layouts[cols[2]] or awful.layout.layouts[1]
+               tag_n.screen = screen_order[tonumber(cols[3])].screen or capi.screen[1]
+               tag_n.selected = cols[4] == "true"
+
+               for _, client in ipairs(gears.string.split(cols[5], ",")) do
+                  local c = clients_by_win[tonumber(client)]
+                  if c then
+                     c:toggle_tag(tag_n)
+                  end
+               end
+
+               n = n + 1
+            end
+      end)
+      os.remove(file)
    end
 end
 

@@ -73,6 +73,8 @@ function bar:create(s)
       )
    )
 
+   local tray = wibox.widget.systray()
+
    local tasklist = awful.widget.tasklist(
       s,
       awful.widget.tasklist.filter.currenttags,
@@ -91,7 +93,7 @@ function bar:create(s)
          tasklist,
          { layout = wibox.layout.fixed.horizontal,
            separator,
-           wibox.widget.systray(),
+           tray,
            separator,
 --           batt,
            separator,
