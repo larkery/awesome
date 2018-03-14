@@ -26,16 +26,19 @@ local keys = require("keys")
 local bar = require("bar")
 require("savefloats")
 
+local color = require("color")
+local main_color = "#703565"
+
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 4
-beautiful.border_focus = "#C56685"
+beautiful.border_focus = color.lighten(main_color, 0.2)
+print(beautiful.border_focus)
 beautiful.border_normal = "#555555"
-beautiful.titlebar_bg_focus = "#703565"
+beautiful.titlebar_bg_focus = main_color
 beautiful.bg_visible = beautiful.bg_focus
 beautiful.fg_visible = "#FFFFFF"
 beautiful.bg_focus = beautiful.titlebar_bg_focus
 beautiful.fg_focus = "#FFFFFF"
-
 
 beautiful.border_width = 2
 
@@ -49,7 +52,9 @@ local function set_wallpaper(s)
       type = "linear",
       from = {s.geometry.x, s.geometry.y},
       to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
-      stops = {{0, "#704560"}, {1, "#323"}}
+      stops = {
+         {0, color.lighten(main_color, 0.1)},
+         {1, color.lighten(main_color, -0.3)}}
    }
 end
 
