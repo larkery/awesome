@@ -74,6 +74,17 @@ local clientbuttons = gears.table.join(
     awful.button({ keys.M }, 1, awful.mouse.client.move),
     awful.button({ keys.M }, 3, awful.mouse.client.resize))
 
+local function insert_above_focused (c)
+   local cfocus = client.focus
+   local cls = client.get(c.screen)
+   for _, v in pairs(cls) do
+      if v == cfocus then
+         break
+      end
+      c:swap(v)
+   end
+end
+
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -89,8 +100,9 @@ awful.rules.rules = {
          screen = awful.screen.preferred,
          placement = awful.placement.no_overlap+awful.placement.no_offscreen,
          size_hints_honor = false,
-         titlebars_enabled = false
-     }
+         titlebars_enabled = false,
+      },
+      callback = insert_above_focused
     },
 
     {
