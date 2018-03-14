@@ -71,11 +71,13 @@ function color.hsl_to_rgba (hsl)
    return {r = r, g = g, b = b, a = hsl.a or 1}
 end
 
-function color.lighten (rgb_string, amount)
+function color.shift (rgb_string, dh, ds, dl)
    local rgb = color.rgba_parse(rgb_string)
    local hsl = color.rgba_to_hsl(rgb)
 
-   hsl.l = math.max(0, math.min(1, hsl.l + amount))
+   hsl.h = math.max(0, math.min(1, hsl.h + dh))
+   hsl.s = math.max(0, math.min(1, hsl.s + ds))
+   hsl.l = math.max(0, math.min(1, hsl.l + dl))
 
    return color.rgba_format(color.hsl_to_rgba(hsl))
 end

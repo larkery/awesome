@@ -31,7 +31,7 @@ local main_color = "#703565"
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 4
-beautiful.border_focus = color.lighten(main_color, 0.2)
+beautiful.border_focus = color.shift(main_color, 0, 0, 0.2)
 print(beautiful.border_focus)
 beautiful.border_normal = "#555555"
 beautiful.titlebar_bg_focus = main_color
@@ -53,9 +53,9 @@ local function set_wallpaper(s)
       from = {s.geometry.x, s.geometry.y + s.geometry.height/2},
       to = {s.geometry.x + s.geometry.width, s.geometry.y},
       stops = {
-         {0, color.lighten(main_color, -0.01)},
-         {0.4, color.lighten(main_color, -0.05)},
-         {1, color.lighten(main_color, -0.15)}}
+         {0, color.shift(main_color,   0.1, 0, -0.01)},
+         {0.4, color.shift(main_color, 0.1, 0, -0.05)},
+         {1, color.shift(main_color,   0.1, 0, -0.15)}}
    }
 end
 
