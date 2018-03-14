@@ -38,6 +38,8 @@ function keys:define_global()
       key({M, S},  ",", util.prev_tag),
       key({M, S},  ".", util.next_tag),
 
+      key({M},     "u", util.go_urgent),
+
       key({M},     "BackSpace", function () awful.screen.focused().selected_tag:delete() end),
 
       key({}, "XF86MonBrightnessDown", util.brightness(-10)),

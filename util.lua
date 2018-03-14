@@ -115,4 +115,8 @@ function util.next_tag ()
    xtags.nth(cur):greedy_view()
 end
 
+function util.go_urgent ()
+   awful.urgent.jumpto(true)
+end
+
 return util
