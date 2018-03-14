@@ -213,8 +213,8 @@ function taglist.taglist_label(t, screen, args)
     local bg_empty = args.bg_empty or theme.taglist_bg_empty
     local fg_empty = args.fg_empty or theme.taglist_fg_empty
 
-    local fg_vis = args.fg_vis or theme.taglist_fg_vis or theme.fg_vis or fg_empty
-    local bg_vis = args.bg_vis or theme.taglist_bg_vis or theme.bg_vis or bg_empty
+    local fg_vis = args.fg_vis or theme.taglist_fg_vis or theme.fg_visible or fg_empty
+    local bg_vis = args.bg_vis or theme.taglist_bg_vis or theme.bg_visible or bg_empty
 
     local show_index = args.show_index
 

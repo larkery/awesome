@@ -8,7 +8,13 @@ local beautiful = require("beautiful")
 
 local bar = { }
 local clock = wibox.widget.textclock()
-local taglist_buttons = { }
+local taglist_buttons = gears.table.join(
+   awful.button({}, 1, function (t) t:greedy_view() end),
+   awful.button({}, 3, function (t)
+         t:move_to()
+         awful.tag.viewtoggle(t)
+   end)
+)
 
 local tasklist_buttons = gears.table.join(
    awful.button({}, 1, util.minimize),
@@ -52,10 +58,7 @@ function bar:create(s)
       s,
       awful.widget.taglist.filter.all,
       taglist_buttons,
-      { bg_vis = beautiful.bg_focus, fg_vis=beautiful.fg_focus,
-        bg_focus = "#376", show_index = true
-
-      }
+      { show_index = true }
    )
 
    local promptbox = awful.widget.prompt()

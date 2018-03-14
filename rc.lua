@@ -27,7 +27,16 @@ local bar = require("bar")
 require("savefloats")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-beautiful.useless_gap = 2
+beautiful.useless_gap = 4
+beautiful.border_focus = "#C56685"
+beautiful.border_normal = "#555555"
+beautiful.titlebar_bg_focus = "#703565"
+beautiful.bg_visible = beautiful.bg_focus
+beautiful.fg_visible = "#FFFFFF"
+beautiful.bg_focus = beautiful.titlebar_bg_focus
+beautiful.fg_focus = "#FFFFFF"
+
+beautiful.border_width = 2
 
 terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
@@ -39,7 +48,7 @@ local function set_wallpaper(s)
       type = "linear",
       from = {s.geometry.x, s.geometry.y},
       to = {s.geometry.x + s.geometry.width, s.geometry.y + s.geometry.height},
-      stops = {{0, "#736"}, {1, "#534"}}
+      stops = {{0, "#704560"}, {1, "#434"}}
    }
 end
 
@@ -78,7 +87,8 @@ awful.rules.rules = {
          buttons = clientbuttons,
          screen = awful.screen.preferred,
          placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-         size_hints_honor = false
+         size_hints_honor = false,
+         titlebars_enabled = false
      }
     },
 
@@ -91,16 +101,20 @@ awful.rules.rules = {
        },
        properties = {
           floating = true,
-          ontop = true
+          ontop = true,
+          border_width = 0
        }
     },
 
     -- Add titlebars to normal clients and dialogs
     {
        rule_any = {
-          type = { "normal", "dialog" }
+          type = { "dialog" }
        },
-       properties = { titlebars_enabled = true }
+       properties = {
+          titlebars_enabled = true,
+          border_width = 0
+       }
     },
 
     {
@@ -108,6 +122,7 @@ awful.rules.rules = {
           instance = {"xclock"}
        },
        properties = {
+          border_width = 0,
           titlebars_enabled = false,
           floating = true,
           ontop = true,
@@ -132,6 +147,36 @@ client.connect_signal("manage", function (c)
         awful.placement.no_offscreen(c)
     end
 end)
+
+function float_titlebar(c)
+   if c then
+      if not c.maximized and
+         (c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating)
+      then
+         if c.titlebar == nil then
+            c:emit_signal("request::titlebars", "rules", {})
+         end
+         awful.titlebar.show(c)
+         c.border_width = 0
+      elseif c.maximized then
+         awful.titlebar.hide(c)
+         c.border_width = 0
+      else
+         awful.titlebar.hide(c)
+         c.border_width = beautiful.border_width
+      end
+   end
+end
+
+client.connect_signal( "property::floating", float_titlebar )
+
+tag.connect_signal( "property::layout",
+                    function (t)
+                       for _,c in ipairs(t:clients()) do
+                          float_titlebar(c)
+                       end
+                    end
+)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
@@ -189,10 +234,20 @@ awesome.connect_signal(
    end
 )
 
-
 awesome.connect_signal(
    "exit",
    function (restart)
       xtags.save_to(tags_state_file)
+   end
+)
+
+tag.connect_signal(
+   "property::layout",
+   function (t)
+      if t.layout == awful.layout.suit.max then
+         t.gap = 0
+      else
+         t.gap = 4
+      end
    end
 )
