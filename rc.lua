@@ -76,6 +76,9 @@ local clientbuttons = gears.table.join(
 
 local function insert_above_focused (c)
    local cfocus = client.focus
+   if c.screen ~= cfocus.screen then
+      return
+   end
    local cls = client.get(c.screen)
    for _, v in pairs(cls) do
       if v == cfocus then
