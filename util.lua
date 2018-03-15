@@ -69,7 +69,6 @@ end
 
 util.mute = util.exec("pamixer -t")
 
-
 local send = require("send")
 
 function util.rename_tag ()
