@@ -10,6 +10,7 @@ local bar = { }
 local clock = wibox.widget.textclock()
 local taglist_buttons = gears.table.join(
    awful.button({}, 1, function (t) t:greedy_view() end),
+   awful.button({}, 2, function (t) t:destroy() end),
    awful.button({}, 3, function (t)
          t:move_to()
          awful.tag.viewtoggle(t)

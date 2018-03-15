@@ -44,6 +44,17 @@ awful.tag.add = function(name, props)
          end
       end
    end
+   function result:destroy()
+      local clients = result:clients()
+      for _,c in ipairs(clients) do
+         if #c:tags() == 1 then
+            c:kill()
+         else
+            c:toggle_tag(result)
+         end
+      end
+      return result:delete()
+   end
    function result:greedy_view(screen)
       screen = screen or awful.screen.focused()
       if self.selected and self.screen ~= screen then

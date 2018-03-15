@@ -32,7 +32,7 @@ local main_color = "#703565"
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 4
 beautiful.border_focus = color.shift(main_color, 0, 0, 0.2)
-print(beautiful.border_focus)
+
 beautiful.border_normal = "#555555"
 beautiful.titlebar_bg_focus = main_color
 beautiful.bg_visible = beautiful.bg_focus
@@ -82,6 +82,7 @@ local clientbuttons = gears.table.join(
 
 local function insert_above_focused (c)
    local cfocus = client.focus
+   if not cfocus then return end
    if c.screen ~= cfocus.screen then
       return
    end

@@ -40,7 +40,7 @@ function keys:define_global()
 
       key({M},     "u", util.go_urgent),
 
-      key({M},     "BackSpace", function () awful.screen.focused().selected_tag:delete() end),
+      key({M},     "BackSpace", function () awful.screen.focused().selected_tag:destroy() end),
 
       key({}, "XF86MonBrightnessDown", util.brightness(-10)),
       key({}, "XF86MonBrightnessUp", util.brightness(10)),
