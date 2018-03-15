@@ -10,6 +10,7 @@ local delete_tag = awful.tag.object.delete
 local add_tag = awful.tag.add
 
 awful.tag.object.delete = function (t)
+   t:emit_signal("deleted", t)
    local index = t.xtag_index
    local result = delete_tag(t)
    if result then

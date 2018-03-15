@@ -351,7 +351,7 @@ function taglist.taglist_label(t, screen, args)
     if not tag.getproperty(t, "icon_only") then
        text = "<span font_desc='"..font.."'>"
        local name = ((t.name == tostring(t.xtag_index) or not show_index) and t.name) or
-          (tostring(t.xtag_index) .. "." .. t.name)
+          (tostring(t.xtag_index) .. " " .. t.name)
 
         if fg_color then
             text = text .. "<span color='" .. gcolor.ensure_pango_color(fg_color) ..

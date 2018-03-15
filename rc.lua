@@ -168,6 +168,8 @@ client.connect_signal("manage", function (c)
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
     end
+
+    float_titlebar(c)
 end)
 
 function float_titlebar(c)

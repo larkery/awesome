@@ -69,6 +69,9 @@ end
 
 util.mute = util.exec("pamixer -t")
 
+
+local send = require("send")
+
 function util.rename_tag ()
    local screen = awful.screen.focused()
    local tag = screen.selected_tag
@@ -79,7 +82,9 @@ function util.rename_tag ()
          {{}, 'Return', function (t) tag.name = t end},
          {{"Shift"}, 'Return',
             function (t)
-               client.focus:move_to_tag(xtags.named(t))
+               local tag = xtags.named(t)
+               client.focus:move_to_tag(tag)
+               send.target = tag
             end
          }
       }
@@ -87,7 +92,7 @@ function util.rename_tag ()
 end
 
 function util.shift_new_tag ()
-   client.focus:move_to_tag(xtags.new_tag())
+   client.focus:move_to_tag(send.to())
 end
 
 function util.rotate_screens ()
