@@ -79,6 +79,7 @@ function util.rename_tag ()
       textbox = screen.prompt.widget,
       hooks = {
          {{}, 'Return', function (t) tag.name = t end},
+         {{"Mod4"}, 'Return', function (t) xtags.named(t):greedy_view() end},
          {{"Shift"}, 'Return',
             function (t)
                local tag = xtags.named(t)

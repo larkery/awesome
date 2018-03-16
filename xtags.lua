@@ -211,7 +211,8 @@ function xtags.load_from (file)
    local f = io.open(file, "r")
    if f then
       f:close()
-      pcall(function()
+      local status, err = pcall(
+         function()
             local n = 1
             local layouts = {}
             for _, l in ipairs(awful.layout.layouts) do
@@ -244,8 +245,16 @@ function xtags.load_from (file)
 
                n = n + 1
             end
-      end)
-      os.remove(file)
+         end
+      )
+      if not status then
+         local naughty = require("naughty")
+         naughty.notify {
+            title = "Sadly, the tag state is lost",
+            text = str(err)
+         }
+         os.remove(file)
+      end
    end
 end
 

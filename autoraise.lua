@@ -8,7 +8,9 @@ function set_focus (c)
    c = c or awful.mouse.client_under_pointer()
    if not c then return false end
    if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-   and awful.client.focus.filter(c) then
+      and awful.client.focus.filter(c)
+      and c.focusable
+   then
       client.focus = c
    end
    if (awful.layout.get(c.screen) == awful.layout.suit.floating) or c.floating then

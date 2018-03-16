@@ -46,7 +46,6 @@ terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
 menubar.utils.terminal = terminal
 
-
 local function set_wallpaper(s)
    gears.wallpaper.set {
       type = "linear",
@@ -76,7 +75,11 @@ root.keys(keys:define_global())
 local clientkeys = keys:define_client()
 
 local clientbuttons = gears.table.join(
-    awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
+   awful.button({ }, 1, function (c)
+         if c.focusable then
+            client.focus = c; c:raise()
+         end
+   end),
     awful.button({ keys.M }, 1, awful.mouse.client.move),
     awful.button({ keys.M }, 3, awful.mouse.client.resize))
 
@@ -118,6 +121,7 @@ awful.rules.rules = {
     {
        rule_any = {
           class = {
+             "Yad",
              "wpa_gui",
              "Pinentry-gtk-2"
           }
@@ -126,6 +130,18 @@ awful.rules.rules = {
           floating = true,
           ontop = true,
           border_width = 0
+       }
+    },
+
+    {
+       rule_any = {
+          class = {"password-input"}
+       },
+       properties = {
+          sticky = true,
+          focusable = false,
+          floating = true,
+          ontop = true
        }
     },
 
@@ -276,3 +292,5 @@ tag.connect_signal(
       end
    end
 )
+
+os.remove(tags_state_file)

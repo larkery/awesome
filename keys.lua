@@ -35,12 +35,12 @@ function keys:define_global()
 
       key({M, A},  ",", util.fewer_cols),
       key({M, A},  ".", util.more_cols),
-      key({M, S},  ",", util.prev_tag),
-      key({M, S},  ".", util.next_tag),
+      key({M, A},  "p", util.prev_tag),
+      key({M, A},  "n", util.next_tag),
 
       key({M},     "u", util.go_urgent),
 
-      key({M},     "BackSpace", function () awful.screen.focused().selected_tag:destroy() end),
+      key({M, A},  "k", function () awful.screen.focused().selected_tag:destroy() end),
 
       key({}, "XF86MonBrightnessDown", util.brightness(-10)),
       key({}, "XF86MonBrightnessUp", util.brightness(10)),
