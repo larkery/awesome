@@ -113,7 +113,7 @@ awful.rules.rules = {
          keys = clientkeys,
          buttons = clientbuttons,
          screen = awful.screen.preferred,
-         placement = awful.placement.no_overlap+awful.placement.no_offscreen2,
+         placement = awful.placement.no_overlap * awful.placement.no_offscreen2,
          size_hints_honor = false,
          titlebars_enabled = true,
       },
@@ -132,7 +132,9 @@ awful.rules.rules = {
           floating = true,
           ontop = true,
           border_width = 0,
-          placement = awful.placement.under_mouse + awful.placement.no_offscreen2
+          placement =
+             --awful.placement.no_offscreen2 + awful.placement.under_mouse
+             awful.placement.under_mouse + awful.placement.no_offscreen
        }
     },
 
@@ -145,7 +147,7 @@ awful.rules.rules = {
           focusable = false,
           floating = true,
           ontop = true,
-          placement = awful.placement.under_mouse + awful.placement.no_offscreen2
+          placement = awful.placement.under_mouse * awful.placement.no_offscreen2
        }
     },
 
@@ -159,8 +161,7 @@ awful.rules.rules = {
           border_width = 0,
           ontop = true,
           placement =
-             awful.placement.under_mouse +
-             awful.placement.no_offscreen2
+             awful.placement.no_offscreen2 + awful.placement.under_mouse
        }
     },
 
@@ -300,5 +301,8 @@ tag.connect_signal(
       end
    end
 )
+
+local tracker = require("tracker")
+tracker.note {event = "startup"}
 
 os.remove(tags_state_file)
