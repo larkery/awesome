@@ -98,6 +98,8 @@ local function insert_above_focused (c)
    end
 end
 
+require("placement-extra")
+
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -111,9 +113,9 @@ awful.rules.rules = {
          keys = clientkeys,
          buttons = clientbuttons,
          screen = awful.screen.preferred,
-         placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+         placement = awful.placement.no_overlap+awful.placement.no_offscreen2,
          size_hints_honor = false,
-         titlebars_enabled = false,
+         titlebars_enabled = true,
       },
       callback = insert_above_focused
     },
@@ -129,7 +131,8 @@ awful.rules.rules = {
        properties = {
           floating = true,
           ontop = true,
-          border_width = 0
+          border_width = 0,
+          placement = awful.placement.under_mouse + awful.placement.no_offscreen2
        }
     },
 
@@ -141,7 +144,8 @@ awful.rules.rules = {
           sticky = true,
           focusable = false,
           floating = true,
-          ontop = true
+          ontop = true,
+          placement = awful.placement.under_mouse + awful.placement.no_offscreen2
        }
     },
 
@@ -152,7 +156,11 @@ awful.rules.rules = {
        },
        properties = {
           titlebars_enabled = true,
-          border_width = 0
+          border_width = 0,
+          ontop = true,
+          placement =
+             awful.placement.under_mouse +
+             awful.placement.no_offscreen2
        }
     },
 
@@ -183,7 +191,7 @@ client.connect_signal("manage", function (c)
       not c.size_hints.user_position
       and not c.size_hints.program_position then
         -- Prevent clients from being unreachable after screen count changes.
-        awful.placement.no_offscreen(c)
+        awful.placement.no_offscreen2(c)
     end
 
     float_titlebar(c)
@@ -191,7 +199,7 @@ end)
 
 function float_titlebar(c)
    if c then
-      if not c.maximized and
+      if not (c.maximized or c.fullscreen) and
          (c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating)
       then
          if c.titlebar == nil then
