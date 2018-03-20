@@ -251,7 +251,7 @@ function xtags.load_from (file)
          local naughty = require("naughty")
          naughty.notify {
             title = "Sadly, the tag state is lost",
-            text = str(err)
+            text = tostring(err)
          }
          os.remove(file)
       end

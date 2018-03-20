@@ -1,6 +1,6 @@
 local capi = {screen=screen}
 local placement = require("awful.placement")
-
+local gtable = require("gears.table")
 -- Get the area covered by a drawin.
 -- @param d The drawin
 -- @tparam[opt=nil] table new_geo A new geometry
@@ -18,7 +18,7 @@ local area_common = function(d, new_geo, ignore_border_width, args)
     -- When using the placement composition along with the "pretend"
     -- option, it is necessary to keep a "virtual" geometry.
     if args and args.override_geometry then
-        geometry = gtable.clone(args.override_geometry)
+       geometry = gtable.clone(args.override_geometry)
     end
 
     geometry.width = geometry.width + 2 * border
@@ -30,33 +30,31 @@ local function get_screen(s)
    return s and capi.screen[s]
 end
 
-function placement.no_offscreen2(c, screen)
-    --HACK necessary for composition to work. The API will be changed soon
-    if type(screen) == "table" then
-        screen = nil
-    end
+local margin = 10
 
+function placement.no_offscreen2(c, args)
     c = c or capi.client.focus
-    local geometry = area_common(c)
-    screen = get_screen(screen or c.screen or a_screen.getbycoord(geometry.x, geometry.y))
+    local geometry = area_common(c, nil, false, args)
+
+    local screen = c.screen
     local screen_geometry = screen.workarea
 
     if geometry.width > screen_geometry.width then
-       geometry.width = screen_geometry.width - 40
-       geometry.x = screen_geometry.x + 20
+       geometry.width = screen_geometry.width - (2*margin)
+       geometry.x = screen_geometry.x + margin
     elseif geometry.x < screen_geometry.x then
-       geometry.x = screen_geometry.x + 20
-    elseif geometry.x > screen_geometry.x + screen_geometry.width then
-       geometry.x = screen_geometry.x + screen_geometry.width - (geometry.width + 20)
+       geometry.x = screen_geometry.x + margin
+    elseif geometry.x + geometry.width > screen_geometry.x + screen_geometry.width then
+       geometry.x = screen_geometry.x + screen_geometry.width - (geometry.width + margin)
     end
 
     if geometry.height > screen_geometry.height then
-       geometry.height = screen_geometry.height - 40
-       geometry.y = screen_geometry.y + 20
+       geometry.height = screen_geometry.height - (2*margin)
+       geometry.y = screen_geometry.y + margin
     elseif geometry.y < screen_geometry.y then
-       geometry.y = screen_geometry.y + 20
-    elseif geometry.y > screen_geometry.y + screen_geometry.height then
-       geometry.y = screen_geometry.y + screen_geometry.height - (geometry.height + 20)
+       geometry.y = screen_geometry.y + margin
+    elseif geometry.y + geometry.height > screen_geometry.y + screen_geometry.height then
+       geometry.y = screen_geometry.y + screen_geometry.height - (geometry.height + margin)
     end
 
     return c:geometry {

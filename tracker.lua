@@ -2,6 +2,10 @@ local capi = {client = client, tag = tag}
 local awful = require("awful")
 local log = {}
 
+--package.loadlib("sqlite3", "")
+--local sqlite = require("sqlite3")
+--local db = sqlite.open("~/.local/share/tracker.db")
+
 function log.note (t)
    local cmd = {"track"}
    for k, v in pairs(t) do

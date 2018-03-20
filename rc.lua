@@ -100,6 +100,8 @@ end
 
 require("placement-extra")
 
+local near_mouse = awful.placement.under_mouse + awful.placement.no_offscreen2
+
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -113,7 +115,7 @@ awful.rules.rules = {
          keys = clientkeys,
          buttons = clientbuttons,
          screen = awful.screen.preferred,
-         placement = awful.placement.no_overlap * awful.placement.no_offscreen2,
+         placement = near_mouse,
          size_hints_honor = false,
          titlebars_enabled = true,
       },
@@ -131,10 +133,7 @@ awful.rules.rules = {
        properties = {
           floating = true,
           ontop = true,
-          border_width = 0,
-          placement =
-             --awful.placement.no_offscreen2 + awful.placement.under_mouse
-             awful.placement.under_mouse + awful.placement.no_offscreen
+          border_width = 0
        }
     },
 
@@ -146,8 +145,7 @@ awful.rules.rules = {
           sticky = true,
           focusable = false,
           floating = true,
-          ontop = true,
-          placement = awful.placement.under_mouse * awful.placement.no_offscreen2
+          ontop = true
        }
     },
 
@@ -159,9 +157,7 @@ awful.rules.rules = {
        properties = {
           titlebars_enabled = true,
           border_width = 0,
-          ontop = true,
-          placement =
-             awful.placement.no_offscreen2 + awful.placement.under_mouse
+          ontop = true
        }
     },
 
@@ -172,11 +168,13 @@ awful.rules.rules = {
        properties = {
           border_width = 0,
           titlebars_enabled = false,
+          titlebars_forbidden = true,
           floating = true,
           ontop = true,
           sticky = true,
           opacity = 0.7,
-          buttons = awful.button({}, 1, awful.mouse.client.move)
+          buttons = awful.button({}, 1, awful.mouse.client.move),
+          placement = awful.placement.no_offscreen2 + awful.placement.top_right
        }
     }
 }
@@ -198,16 +196,21 @@ client.connect_signal("manage", function (c)
     float_titlebar(c)
 end)
 
+local function is_floating (c)
+   return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+end
+
 function float_titlebar(c)
    if c then
       if not (c.maximized or c.fullscreen) and
-         (c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating)
+         not c.titlebars_forbidden and
+         is_floating(c)
       then
          if c.titlebar == nil then
             c:emit_signal("request::titlebars", "rules", {})
          end
          awful.titlebar.show(c)
-         c.border_width = 0
+         c.border_width = 1
       elseif c.maximized then
          awful.titlebar.hide(c)
          c.border_width = 0
@@ -272,8 +275,21 @@ end)
 -- my autoraise
 require("autoraise")
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus",
+                      function(c)
+                         if is_floating(c) then
+                            c.border_color = beautiful.titlebar_bg_focus
+                         else
+                            c.border_color = beautiful.border_focus
+                         end
+
+                      end
+)
+client.connect_signal("unfocus",
+                      function(c)
+                         c.border_color = beautiful.border_normal
+                      end
+)
 
 awesome.connect_signal(
    "screen::change",
@@ -281,13 +297,6 @@ awesome.connect_signal(
       if state == "Connected" or state == "Disconnected" then
          awful.spawn("autorandr -c", false)
       end
-   end
-)
-
-awesome.connect_signal(
-   "exit",
-   function (restart)
-      xtags.save_to(tags_state_file)
    end
 )
 
@@ -306,3 +315,10 @@ local tracker = require("tracker")
 tracker.note {event = "startup"}
 
 os.remove(tags_state_file)
+
+awesome.connect_signal(
+   "exit",
+   function (restart)
+      xtags.save_to(tags_state_file)
+   end
+)
