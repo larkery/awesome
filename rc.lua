@@ -312,7 +312,13 @@ tag.connect_signal(
 )
 
 local tracker = require("tracker")
-tracker.note {event = "startup"}
+tracker.note("awesome", "restart")
+
+if hostname == "limiting-factor" then
+   tracker.on = true
+else
+   tracker.on = false
+end
 
 os.remove(tags_state_file)
 
