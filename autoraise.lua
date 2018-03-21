@@ -2,7 +2,7 @@ local awful = require("awful")
 local gears = require("gears")
 
 local window = nil
-local timer = gears.timer{ timeout = 0.2 }
+local timer = gears.timer{ timeout = 0.5 }
 
 function set_focus (c)
    c = c or awful.mouse.client_under_pointer()

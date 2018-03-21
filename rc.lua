@@ -314,7 +314,7 @@ tag.connect_signal(
 local tracker = require("tracker")
 tracker.note("awesome", "restart")
 
-if hostname == "limiting-factor" then
+if awesome.hostname == "limiting-factor" then
    tracker.on = true
 else
    tracker.on = false
