@@ -1,6 +1,6 @@
 local capi = {client = client, tag = tag}
 local awful = require("awful")
-local log = { on = false }
+local log = { on = false, last_tag = "" }
 
 function log.note (t, v)
    if log.on then
@@ -8,15 +8,17 @@ function log.note (t, v)
    end
 end
 
-local function log_window_title (w)
-   if capi.client.focus == w then
-      log.note("window", (w.name or "") .. " " .. w.class)
+local function log_tag (t)
+   if t and t.selected and t.name and t.name ~= log.last_tag then
+      log.last_tag = t.name
+      log.note("tag", t.name)
    end
 end
 
-local function log_tag (t)
-   if t.selected and t.name then
-      log.note("tag", t.name)
+local function log_window_title (w)
+   if capi.client.focus == w then
+      log.note("window", (w.name or "") .. " " .. w.class)
+      log_tag(w.first_tag)
    end
 end
 
