@@ -21,6 +21,8 @@ local xtags = require("xtags")
 
 xtags.load_from(tags_state_file)
 
+awful.spawn({"autorandr", "-c"})
+
 local taglist = require("taglist")
 local keys = require("keys")
 local bar = require("bar")

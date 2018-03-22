@@ -233,7 +233,7 @@ function xtags.load_from (file)
 
                tag_n.name = cols[1]
                tag_n.layout = layouts[cols[2]] or awful.layout.layouts[1]
-               tag_n.screen = screen_order[tonumber(cols[3])].screen or capi.screen[1]
+               tag_n.screen = (screen_order[tonumber(cols[3])] or {screen=capi.screen[1]}).screen
                tag_n.selected = cols[4] == "true"
 
                for _, client in ipairs(gears.string.split(cols[5], ",")) do
