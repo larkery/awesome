@@ -79,6 +79,18 @@ function keys:define_client()
       key({M}, "z",     util.minimize, {description = "minimize", group="client"}),
       key({M,S}, "o", util.shift_next_screen, {description = "-> next screen", group = "window"}),
 
+      key({M}, "c",
+         function(c)
+            if c.opacity == 1 then
+               c.opacity = 0.75
+            elseif c.opacity == 0.75 then
+               c.opacity = 0.5
+            else
+               c.opacity = 1
+            end
+         end
+      ),
+
       key({M}, "f", util.full_toggle, {description = "fullscreen", group="window"}),
       key({M}, "m", util.max_toggle, {description = "maximize", group="window"}),
 
