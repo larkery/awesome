@@ -124,7 +124,16 @@ function util.go_urgent ()
    awful.client.urgent.jumpto(true)
 end
 
-
+function util.go_empty_tag ()
+   local screen = awful.screen.focused()
+   awful.prompt.run {
+      prompt = "<b>Go tag: </b>",
+      textbox = screen.prompt.widget,
+      hooks = {
+         {{}, 'Return', function (t) xtags.named(t):greedy_view() end}
+      }
+   }
+end
 
 function util.client_menu()
    local m = awful.menu.clients(

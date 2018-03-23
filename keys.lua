@@ -55,6 +55,7 @@ function keys:define_global()
 
       key({M}, "'", util.rename_tag),
       key({M, S}, "'", util.shift_new_tag),
+      key({M}, "=", util.go_empty_tag),
 
       key({M, S}, "Return", util.spawn("urxvt"), {description = "terminal", group = "spawn"})
    )
