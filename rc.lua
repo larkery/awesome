@@ -297,11 +297,15 @@ client.connect_signal("unfocus",
                       end
 )
 
+local function autorandr ()
+   awful.spawn({"autorandr", "-c"}, false)
+end
+
 awesome.connect_signal(
    "screen::change",
    function (output, state)
       if state == "Connected" or state == "Disconnected" then
-         awful.spawn("autorandr -c", false)
+         autorandr()
       end
    end
 )
@@ -328,7 +332,7 @@ end
 
 os.remove(tags_state_file)
 
-awful.spawn({"autorandr", "-c"})
+autorandr()
 
 awesome.connect_signal(
    "exit",
