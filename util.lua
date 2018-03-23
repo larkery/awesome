@@ -124,4 +124,16 @@ function util.go_urgent ()
    awful.client.urgent.jumpto(true)
 end
 
+
+
+function util.client_menu()
+   local m = awful.menu.clients(
+      { theme = {width = 500, height = 24} },
+      nil,
+      function (c)
+         return not(c:isvisible())
+      end
+   )
+end
+
 return util
