@@ -31,6 +31,16 @@ function remember (c)
    end
 end
 
+function restore (c)
+   local s = stored[c.window]
+   if s then
+      c:geometry(unrel(c.screen.geometry, stored[c.window]))
+      return true
+   else
+      return false
+   end
+end
+
 client.connect_signal( "manage", remember )
 client.connect_signal( "property::geometry", remember )
 client.connect_signal( "unmanage", forget )
@@ -45,3 +55,5 @@ tag.connect_signal(
       end
    end
 )
+
+return restore

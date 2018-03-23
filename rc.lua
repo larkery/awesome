@@ -211,6 +211,9 @@ function float_titlebar(c)
          end
          awful.titlebar.show(c)
          c.border_width = 1
+         if client.focus == c then
+            c.border_color = beautiful.titlebar_bg_focus
+         end
       elseif c.maximized then
          awful.titlebar.hide(c)
          c.border_width = 0
@@ -282,12 +285,15 @@ client.connect_signal("focus",
                          else
                             c.border_color = beautiful.border_focus
                          end
-
+                         c.opacity = 1
                       end
 )
 client.connect_signal("unfocus",
                       function(c)
                          c.border_color = beautiful.border_normal
+                         if c.transparent and is_floating(c) then
+                            c.opacity = 0.5
+                         end
                       end
 )
 

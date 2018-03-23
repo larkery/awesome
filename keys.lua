@@ -3,6 +3,8 @@ local awful = require("awful")
 local util = require("util")
 local xtags = require("xtags")
 
+local restore_float = require("savefloats")
+
 local M = "Mod4"
 local C = "Control"
 local A = "Mod1"
@@ -72,24 +74,24 @@ function keys:define_client()
       key({M}, "k",     util.kill, {description = "close", group="client"}),
       key({M}, "t",
          function(c)
+            local restored = restore_float(c)
             awful.client.floating.toggle(c)
+            if not(restored) then
+               local margin = 20
+               local geom = c:geometry()
+               geom.x = geom.x+margin
+               geom.y = geom.y+margin
+               geom.width = math.max(margin, geom.width - (2*margin))
+               geom.height = math.max(geom.height - (2*margin), margin)
+               c:geometry(geom)
+            end
             c.ontop = c.floating
          end
          , {description = "toggle floating", group="client"}),
       key({M}, "z",     util.minimize, {description = "minimize", group="client"}),
       key({M,S}, "o", util.shift_next_screen, {description = "-> next screen", group = "window"}),
 
-      key({M}, "c",
-         function(c)
-            if c.opacity == 1 then
-               c.opacity = 0.75
-            elseif c.opacity == 0.75 then
-               c.opacity = 0.5
-            else
-               c.opacity = 1
-            end
-         end
-      ),
+      key({M}, "c", function(c) c.transparent = not c.transparent end),
 
       key({M}, "f", util.full_toggle, {description = "fullscreen", group="window"}),
       key({M}, "m", util.max_toggle, {description = "maximize", group="window"}),
