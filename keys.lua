@@ -18,6 +18,8 @@ function keys:define_global()
       key({M, C}, "r", awesome.restart, {description = "restart awesome", group = "session"}),
       key({M},    "q", function () awful.screen.focused().menu:toggle() end),
 
+      key({M},    "y", function () awful.menu.clients({ theme = {width = 500} }) end),
+
       key({M}, "h", util.narrow_master, {description = "narrow master", group = "layout"}),
       key({M}, "l", util.widen_master, {description = "widen master", group = "layout"}),
       key({M}, "x", util.run, {description = "prompt", group="spawn"}),
