@@ -3,7 +3,7 @@ local wibox = require("wibox")
 local taglist = require("taglist")
 local gears = require("gears")
 local util = require("util")
---local batt = require("batteryarc")
+local batt = require("widget/battery")
 local beautiful = require("beautiful")
 
 local bar = { }
@@ -84,6 +84,8 @@ function bar:create(s)
       tasklist_buttons
    )
 
+   local batt = batt.create()
+
    mywibox:setup({
          layout = wibox.layout.align.horizontal,
          { layout = wibox.layout.fixed.horizontal,
@@ -98,7 +100,7 @@ function bar:create(s)
            separator,
            tray,
            separator,
---           batt,
+           batt,
            separator,
            clock
          }
