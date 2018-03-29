@@ -32,26 +32,28 @@ function batwid.create ()
    arc.max_value = 100
    arc.thickness = 3
    arc.padding = 1
+   arc.start_angle = -math.pi/2
 
    local update = function (state)
       if #state > 0 then
          local val = tonumber(state[1].perc)
          if state[1].state == "Charging" then
-            txt:set_markup("+")
+            txt:set_markup("↑")
          else
-            txt:set_markup("-")
+            txt:set_markup("☇")
          end
 
-         arc.value = tonumber(state[1].perc)
+         arc.values = {100 - tonumber(state[1].perc),
+                       tonumber(state[1].perc)}
 
          if val < 15 then
-            arc.colors = {"#ff8c00"}
+            arc.colors = {"#000000", "#ff8c00"}
          elseif val < 60 then
-            arc.colors = {"#ffd700"}
+            arc.colors = {"#000000", "#ffd700"}
          elseif val < 80 then
-            arc.colors = {"#7fff00"}
+            arc.colors = {"#000000", "#7fff00"}
          else
-            arc.colors = {"#00fa9a"}
+            arc.colors = {"#000000", "#00fa9a"}
          end
       end
    end
