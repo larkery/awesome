@@ -2,6 +2,7 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local naughty = require("naughty")
+local color = require("color")
 
 local batwid = {}
 
@@ -32,29 +33,33 @@ function batwid.create ()
    arc.max_value = 100
    arc.thickness = 3
    arc.padding = 1
-   arc.start_angle = -math.pi/2
+   arc.start_angle = -math.pi / 2
+
+   local ctable = {}
+   for val=0,100 do
+      local crgb = {r = math.sqrt((100 - val) / 100),
+                    g = math.sqrt(val / 100), b = 0,
+                    a=1}
+      local c = color.rgba_format(crgb)
+      ctable[val] = c
+   end
 
    local update = function (state)
       if #state > 0 then
          local val = tonumber(state[1].perc)
          if state[1].state == "Charging" then
-            txt:set_markup("↑")
+            txt:set_markup("+")
          else
-            txt:set_markup("☇")
+            txt:set_markup("-")
          end
 
-         arc.values = {100 - tonumber(state[1].perc),
-                       tonumber(state[1].perc)}
 
-         if val < 15 then
-            arc.colors = {"#000000", "#ff8c00"}
-         elseif val < 60 then
-            arc.colors = {"#000000", "#ffd700"}
-         elseif val < 80 then
-            arc.colors = {"#000000", "#7fff00"}
-         else
-            arc.colors = {"#000000", "#00fa9a"}
-         end
+         local values = {100 - val, val}
+         local colors = {"#000000", ctable[math.floor(val)]}
+
+         arc.values = values
+         arc.colors = colors
+
       end
    end
 
