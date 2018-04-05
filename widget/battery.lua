@@ -44,15 +44,17 @@ function batwid.create ()
       ctable[val] = c
    end
 
+   local label_map = {}
+   label_map["Charging"] = "C"
+   label_map["Unknown"] = "C"
+   label_map["Full"] = "•"
+   label_map["Discharging"] = "D"
+
    local update = function (state)
       if #state > 0 then
          local val = tonumber(state[1].perc)
-         if state[1].state == "Charging" then
-            txt:set_markup("+")
-         else
-            txt:set_markup("-")
-         end
-
+         local lbl = label_map[state[1].state] or "-"
+         txt:set_markup("<b><span color=\"white\">" .. lbl .. "</span></b>")
 
          local values = {100 - val, val}
          local colors = {"#000000", ctable[math.floor(val)]}
