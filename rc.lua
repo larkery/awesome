@@ -129,7 +129,8 @@ awful.rules.rules = {
           class = {
              "Yad",
              "wpa_gui",
-             "Pinentry-gtk-2"
+             "Pinentry-gtk-2",
+             "TelegramDesktop"
           }
        },
        properties = {
