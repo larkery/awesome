@@ -13,7 +13,7 @@ function set_focus (c)
    then
       client.focus = c
    end
-   if (awful.layout.get(c.screen) == awful.layout.suit.floating) or c.floating then
+   if (awful.layout.get(c.screen) == awful.layout.suit.floating) then
       window = c
       timer:again()
    else

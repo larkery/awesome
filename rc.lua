@@ -78,7 +78,7 @@ local clientkeys = keys:define_client()
 
 local clientbuttons = gears.table.join(
    awful.button({ }, 1, function (c)
-         if c.focusable then
+         if c.focusable and not c == client.focus then
             client.focus = c; c:raise()
          end
    end),
