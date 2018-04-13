@@ -34,7 +34,7 @@ end
 -- cause information loss (where the client was placed, was it
 -- tabbed and so on)
 local function check_tiled(c)
-    return (not c.floating)
+   return (not c.floating)
         or c.maximized
         or c.maximized_horizontal
         or c.maximized_vertical

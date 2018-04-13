@@ -2,7 +2,8 @@ local gears = require("gears")
 local awful = require("awful")
 local tags_state_file = awful.util.getdir("cache") .. "/persist-tags"
 
-local dynamic = require("dynamic")
+-- goes mental after a little while, sadly
+-- local dynamic = require("dynamic")
 
 awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, awful.layout.suit.max, awful.layout.suit.floating, }
 
