@@ -2,6 +2,8 @@ local gears = require("gears")
 local awful = require("awful")
 local tags_state_file = awful.util.getdir("cache") .. "/persist-tags"
 
+require("better-resize")
+
 -- goes mental after a little while, sadly
 -- local dynamic = require("awful.layout.dynamic")
 
