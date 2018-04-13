@@ -3,7 +3,7 @@ local awful = require("awful")
 local tags_state_file = awful.util.getdir("cache") .. "/persist-tags"
 
 -- goes mental after a little while, sadly
--- local dynamic = require("dynamic")
+-- local dynamic = require("awful.layout.dynamic")
 
 awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, awful.layout.suit.max, awful.layout.suit.floating, }
 
@@ -81,7 +81,7 @@ local clientkeys = keys:define_client()
 
 local clientbuttons = gears.table.join(
    awful.button({ }, 1, function (c)
-         if c.focusable and not c == client.focus then
+         if c.focusable and (not c.floating) or (not c == client.focus) then
             client.focus = c; c:raise()
          end
    end),
