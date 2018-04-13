@@ -56,7 +56,9 @@ function keys:define_global()
       key({M}, "'", util.rename_tag),
       key({M}, "=", util.go_empty_tag),
 
-      key({M, S}, "Return", util.spawn("urxvt"), {description = "terminal", group = "spawn"})
+      key({M, S}, "Return", util.spawn("urxvt"), {description = "terminal", group = "spawn"}),
+
+      key({M, S}, "/", util.exec("notmuch new"))
    )
 
    for i = 1, 9 do
