@@ -12,7 +12,7 @@ local function mouse_resize_handler(c, _, _, _, orientation)
    local c_above, c_below
    local idx_above, idx_below
    local wfact_above, wfact_below
-   local jump_to = {x = x, y = y}
+   local jump_to = {x = x, y = y, blah = true}
    local move_mwfact = false
 
    do
@@ -36,10 +36,13 @@ local function mouse_resize_handler(c, _, _, _, orientation)
          jump_to.y = g.y + g.height
       end
 
-      if math.min( x - wa.x, wa.x - x + wa.width ) < wa.width / 6 then
+      local mw_split = wa.x + wa.width * c.screen.selected_tag.master_width_factor
+
+      if math.abs(mw_split - x) > wa.width / 6 then
          move_mwfact = false
       else
          move_mwfact = true
+         jump_to.x = mw_split
       end
    end
 
@@ -66,6 +69,13 @@ local function mouse_resize_handler(c, _, _, _, orientation)
          end
 
          if pressed then
+            if move_mwfact then
+               c.screen.selected_tag.master_width_factor =
+                  math.min(math.max(
+                              (_mouse.x - wa.x)/wa.width
+                              , 0.01), 0.99)
+            end
+
             if idx_above then
                local factor_delta = (_mouse.y - jump_to.y) / wa.height
 
@@ -80,12 +90,6 @@ local function mouse_resize_handler(c, _, _, _, orientation)
                local colfact = data[idx.col] or {}
                colfact[idx_above] = wfact_above + factor_delta
                colfact[idx_below] = wfact_below - factor_delta
-               if move_mwfact then
-                  c.screen.selected_tag.master_width_factor =
-                     math.min(math.max(
-                                 (_mouse.x - wa.x)/wa.width
-                                 , 0.01), 0.99)
-               end
                awful.client.incwfact(0, c_above) -- just in case
                awful.client.incwfact(0, c_below)
             end
@@ -97,3 +101,14 @@ local function mouse_resize_handler(c, _, _, _, orientation)
 end
 
 awful.layout.suit.tile.mouse_resize_handler = mouse_resize_handler
+
+-- local old_coords = mouse.coords
+
+-- mouse.coords = function(...)
+--    if select(1, ...) and not(select(1, ...).blah) then
+--       print("set mouse!!!")
+--       print(debug.traceback())
+
+--    end
+--    return old_coords(...)
+-- end

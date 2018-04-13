@@ -34,6 +34,10 @@ require("savefloats")
 local color = require("color")
 local main_color = "#703565"
 
+local function is_floating (c)
+   return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+end
+
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.useless_gap = 4
 beautiful.border_focus = color.shift(main_color, 0, 0, 0.2)
@@ -81,6 +85,14 @@ root.keys(keys:define_global())
 
 local clientkeys = keys:define_client()
 
+local function resize_client(c)
+   if is_floating(c) or not(c.screen.selected_tag.layout.mouse_resize_handler) then
+      awful.mouse.client.resize(c, false, {include_sides = true})
+   else
+      c.screen.selected_tag.layout.mouse_resize_handler(c, "blah", 0, 0)
+   end
+end
+
 local clientbuttons = gears.table.join(
    awful.button({ }, 1, function (c)
          if c.focusable and (not c.floating) or (not c == client.focus) then
@@ -88,7 +100,8 @@ local clientbuttons = gears.table.join(
          end
    end),
     awful.button({ keys.M }, 1, awful.mouse.client.move),
-    awful.button({ keys.M }, 3, awful.mouse.client.resize))
+    awful.button({ keys.M }, 3, resize_client)
+)
 
 local function insert_above_focused (c)
    local cfocus = client.focus
@@ -204,9 +217,6 @@ client.connect_signal("manage", function (c)
     float_titlebar(c)
 end)
 
-local function is_floating (c)
-   return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
-end
 
 function float_titlebar(c)
    if c then
