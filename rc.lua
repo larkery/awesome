@@ -89,7 +89,7 @@ local function resize_client(c)
    if is_floating(c) or not(c.screen.selected_tag.layout.mouse_resize_handler) then
       awful.mouse.client.resize(c, false, {include_sides = true})
    else
-      c.screen.selected_tag.layout.mouse_resize_handler(c, "blah", 0, 0)
+      c.screen.selected_tag.layout.mouse_resize_handler(c)
    end
 end
 

@@ -1,22 +1,20 @@
 local capi = { client = client, mouse = mouse, screen = screen, mousegrabber = mousegrabber }
 local awful = require("awful")
 
-local function mouse_resize_handler(c, _, _, _, orientation)
-   orientation = orientation or "tile"
+local function mouse_resize_handler(m, c)
    awful.client.incwfact(0, c) -- needed to fix normalization at start
-
-   local start = capi.mouse.coords()
+   local start = m(capi.mouse.coords())
    local x,y = start.x, start.y
-   local wa = c.screen.workarea
+   local wa = m(c.screen.workarea)
    local idx = awful.client.idx(c)
    local c_above, c_below
    local idx_above, idx_below
    local wfact_above, wfact_below
-   local jump_to = {x = x, y = y, blah = true}
+   local jump_to = {x = x, y = y}
    local move_mwfact = false
 
    do
-      local g = c:geometry()
+      local g = m(c:geometry())
 
       local v_border = math.max(g.height / 3, 20)
 
@@ -27,7 +25,7 @@ local function mouse_resize_handler(c, _, _, _, orientation)
          jump_to.y = g.y
          idx_above = idx.idx - 1
          idx_below = idx.idx
-      elseif idx.idx < (idx.num) and x >= g.y + g.height - v_border then
+      elseif idx.idx < (idx.num) and y >= g.y + g.height - v_border then
          -- we are near the bottom edge of the window
          c_above = c
          c_below = awful.client.next(1, c)
@@ -54,7 +52,7 @@ local function mouse_resize_handler(c, _, _, _, orientation)
       wfact_below = colfact[idx_below] or 1
    end
 
-   capi.mouse.coords(jump_to)
+   capi.mouse.coords(m(jump_to))
 
    capi.mousegrabber.run(
       function (_mouse)
@@ -67,6 +65,8 @@ local function mouse_resize_handler(c, _, _, _, orientation)
                break
             end
          end
+
+         _mouse = m(_mouse)
 
          if pressed then
             if move_mwfact then
@@ -100,7 +100,13 @@ local function mouse_resize_handler(c, _, _, _, orientation)
       end, "cross")
 end
 
-awful.layout.suit.tile.mouse_resize_handler = mouse_resize_handler
+awful.layout.suit.tile.mouse_resize_handler = function(c)
+   mouse_resize_handler(function(x) return x end, c)
+end
+awful.layout.suit.tile.bottom.mouse_resize_handler = function(c)
+   mouse_resize_handler(function(q) return {x = q.y, y=q.x, width=q.height, height=q.width} end,
+      c)
+end
 
 -- local old_coords = mouse.coords
 
