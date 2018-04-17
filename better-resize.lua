@@ -103,7 +103,6 @@ local function mouse_resize_handler(m, c)
                colfact[idx_above] = wfact_above + factor_delta
                colfact[idx_below] = wfact_below - factor_delta
                awful.client.incwfact(0, c_above) -- just in case
-               awful.client.incwfact(0, c_below)
             end
             return true
          else

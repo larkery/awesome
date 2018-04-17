@@ -94,17 +94,19 @@ local function resize_client(c)
 end
 
 local function near_border(w, a, b)
-   return function (c)
+   local w2 = (1 - 2 * w)
+   return function (c, ...)
       local coords = mouse.coords()
       local geom = c:geometry()
-      if coords.x < geom.x + w or
-         coords.x > geom.x + geom.width -w or
-         coords.y < geom.y + w or
-         coords.y > geom.y + geom.height -w
+
+      if coords.x < geom.x + (w * geom.width) or
+         coords.x > geom.x + (geom.width * w2) or
+         coords.y < geom.y + (w * geom.width) or
+         coords.y > geom.y + (geom.height * w2)
       then
-         return a(c)
+         return a(c, ...)
       else
-         return b(c)
+         return b(c, ...)
       end
    end
 end
@@ -119,7 +121,7 @@ end
 
 local clientbuttons = gears.table.join(
    awful.button({ }, 1, raise_client),
-   awful.button({ keys.M }, 1, near_border(128,
+   awful.button({ keys.M }, 1, near_border(0.2,
                                            resize_client,
                                            awful.mouse.client.move)),
     awful.button({ keys.M }, 3, resize_client)
