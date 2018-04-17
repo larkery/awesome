@@ -52,6 +52,18 @@ local function mouse_resize_handler(m, c)
       wfact_below = colfact[idx_below] or 1
    end
 
+   if idx_above and move_mwfact then
+      cursor = "cross"
+   elseif idx_above then
+      cursor = m({y = "sb_v_double_arrow",
+                  x = "sb_h_double_arrow"}).y
+   elseif move_mwfact then
+      cursor = m({y = "sb_v_double_arrow",
+                  x = "sb_h_double_arrow"}).x
+   else
+      return
+   end
+
    capi.mouse.coords(m(jump_to))
 
    capi.mousegrabber.run(
@@ -97,7 +109,7 @@ local function mouse_resize_handler(m, c)
          else
             return false
          end
-      end, "cross")
+      end, cursor)
 end
 
 awful.layout.suit.tile.mouse_resize_handler = function(c)
