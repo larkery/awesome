@@ -16,7 +16,7 @@ local function mouse_resize_handler(m, c)
    do
       local g = m(c:geometry())
 
-      local v_border = math.max(g.height / 3, 20)
+      local v_border = 0.2 * g.height
 
       if idx.idx > 1 and y >= g.y and y <= g.y + v_border then
          -- we are near the top edge of the window
@@ -61,7 +61,7 @@ local function mouse_resize_handler(m, c)
       cursor = m({y = "sb_v_double_arrow",
                   x = "sb_h_double_arrow"}).x
    else
-      return
+      return false
    end
 
    capi.mouse.coords(m(jump_to))
@@ -109,13 +109,15 @@ local function mouse_resize_handler(m, c)
             return false
          end
       end, cursor)
+
+   return true
 end
 
 awful.layout.suit.tile.mouse_resize_handler = function(c)
-   mouse_resize_handler(function(x) return x end, c)
+   return mouse_resize_handler(function(x) return x end, c)
 end
 awful.layout.suit.tile.bottom.mouse_resize_handler = function(c)
-   mouse_resize_handler(function(q) return {x = q.y, y=q.x, width=q.height, height=q.width} end,
+   return mouse_resize_handler(function(q) return {x = q.y, y=q.x, width=q.height, height=q.width} end,
       c)
 end
 

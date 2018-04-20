@@ -88,8 +88,9 @@ local clientkeys = keys:define_client()
 local function resize_client(c)
    if is_floating(c) or not(c.screen.selected_tag.layout.mouse_resize_handler) then
       awful.mouse.client.resize(c, false, {include_sides = true})
+      return true
    else
-      c.screen.selected_tag.layout.mouse_resize_handler(c)
+      return c.screen.selected_tag.layout.mouse_resize_handler(c)
    end
 end
 
@@ -104,10 +105,12 @@ local function near_border(w, a, b)
          coords.y < geom.y + (w * geom.width) or
          coords.y > geom.y + (geom.height * w2)
       then
-         return a(c, ...)
-      else
-         return b(c, ...)
+         local result = a(c, ...)
+         if result then
+            return result
+         end
       end
+      return b(c, ...)
    end
 end
 
@@ -124,7 +127,7 @@ local clientbuttons = gears.table.join(
    awful.button({ keys.M }, 1, near_border(0.2,
                                            resize_client,
                                            awful.mouse.client.move)),
-    awful.button({ keys.M }, 3, resize_client)
+   awful.button({ keys.M }, 3, resize_client)
 )
 
 local function insert_above_focused (c)
