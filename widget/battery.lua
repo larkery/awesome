@@ -3,6 +3,7 @@ local wibox = require("wibox")
 local gears = require("gears")
 local naughty = require("naughty")
 local color = require("color")
+local util = require("util")
 
 local batwid = {}
 
@@ -71,6 +72,21 @@ function batwid.create ()
 
    timer:connect_signal("timeout", function () batwid.acpi(update) end)
    timer:start()
+
+   local powmenu = awful.menu.new({
+      items = {
+        {"hibernate", util.exec("systemctl hibernate")},
+        {"suspend", util.exec("systemctl suspend")},
+        {"reboot", util.exec("systemctl reboot")},
+        {"poweroff", util.exec("systemctl poweroff")}
+      }
+   })
+
+   arc:connect_signal("button::press",
+      function (_, _, button)
+         powmenu:toggle()
+      end
+   )
 
    return arc
 end
