@@ -32,7 +32,7 @@ local bar = require("bar")
 require("savefloats")
 
 local color = require("color")
-local main_color = "#703565"
+local main_color = "#635d6c"
 
 local function is_floating (c)
    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
@@ -44,7 +44,7 @@ beautiful.border_focus = color.shift(main_color, 0, 0, 0.2)
 
 beautiful.border_normal = "#555555"
 beautiful.titlebar_bg_focus = main_color
-beautiful.bg_visible = beautiful.bg_focus
+beautiful.bg_visible = color.shift(main_color, 0, 0, -0.1)
 beautiful.fg_visible = "#FFFFFF"
 beautiful.bg_focus = beautiful.titlebar_bg_focus
 beautiful.fg_focus = "#FFFFFF"
