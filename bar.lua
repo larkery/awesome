@@ -28,7 +28,7 @@ separator:set_text(" ")
 
 local function menu (s)
    local items = {
-      {"hibernate", util.exec("systemctl hibernate")},
+
    }
 
    for _, l in ipairs(awful.layout.layouts) do

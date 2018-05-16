@@ -16,8 +16,6 @@ local key = awful.key
 function keys:define_global()
    local ks = gears.table.join(
       key({M, C}, "r", awesome.restart, {description = "restart awesome", group = "session"}),
-      key({M},    "q", function () awful.screen.focused().menu:toggle() end),
-
       key({M},    "y", util.client_menu),
 
       key({M}, "h", util.narrow_master, {description = "narrow master", group = "layout"}),
