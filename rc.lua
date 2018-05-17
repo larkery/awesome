@@ -16,8 +16,6 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local wibox = require("wibox")
 local naughty = require("naughty")
 
-naughty.config.defaults.position = "bottom_right"
-naughty.config.defaults.opacity = 0.8
 
 require("handle_errors")
 
@@ -48,6 +46,17 @@ beautiful.bg_visible = color.shift(main_color, 0, 0, -0.1)
 beautiful.fg_visible = "#FFFFFF"
 beautiful.bg_focus = beautiful.titlebar_bg_focus
 beautiful.fg_focus = "#FFFFFF"
+
+beautiful.notification_font = "Sans 12"
+
+naughty.config.defaults.position = "top_middle"
+naughty.config.defaults.margin = 5
+naughty.config.padding = 100
+naughty.config.spacing = 4
+naughty.config.defaults.border_width = 2
+naughty.config.defaults.opacity = 1
+naughty.config.defaults.width = 200
+
 
 beautiful.border_width = 2
 
