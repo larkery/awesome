@@ -51,7 +51,7 @@ beautiful.notification_font = "Sans 12"
 
 naughty.config.defaults.position = "top_right"
 naughty.config.defaults.margin = 5
-naughty.config.padding = 100
+naughty.config.padding = 20
 naughty.config.spacing = 4
 naughty.config.defaults.border_width = 2
 naughty.config.defaults.opacity = 1
