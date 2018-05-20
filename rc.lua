@@ -16,7 +16,6 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local wibox = require("wibox")
 local naughty = require("naughty")
 
-
 require("handle_errors")
 
 -- my things
@@ -55,7 +54,6 @@ naughty.config.padding = 20
 naughty.config.spacing = 4
 naughty.config.defaults.border_width = 2
 naughty.config.defaults.opacity = 1
-naughty.config.defaults.width = 200
 
 
 beautiful.border_width = 2
