@@ -66,7 +66,6 @@ function bar:create(s)
 
    local promptbox = awful.widget.prompt()
    s.prompt = promptbox
-   s.menu = boxmenu
 
    local layoutbox = awful.widget.layoutbox(s)
    layoutbox:buttons(
@@ -78,10 +77,21 @@ function bar:create(s)
 
    local tray = wibox.widget.systray()
 
+   local mintasklist = awful.widget.tasklist(
+         s,
+         awful.widget.tasklist.filter.minimizedcurrenttags,
+         tasklist_buttons,
+         {
+             disable_task_name = true
+         }
+   )
+
    local tasklist = awful.widget.tasklist(
-      s,
-      awful.widget.tasklist.filter.currenttags,
-      tasklist_buttons
+         s,
+         function (c, s)
+           return awful.widget.tasklist.filter.currenttags(c, s) and not c.minimized
+         end,
+         tasklist_buttons
    )
 
    local batt = batt.create()
@@ -93,7 +103,8 @@ function bar:create(s)
            separator,
            taglist,
            separator,
-           promptbox
+           promptbox,
+           mintasklist
          },
          tasklist,
          { layout = wibox.layout.fixed.horizontal,

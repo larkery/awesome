@@ -73,7 +73,7 @@ function batwid.create ()
    timer:connect_signal("timeout", function () batwid.acpi(update) end)
    timer:start()
 
-   local powmenu = awful.menu.new({
+   local power_menu = awful.menu.new({
       items = {
         {"hibernate", util.exec("systemctl hibernate")},
         {"suspend", util.exec("systemctl suspend")},
@@ -84,7 +84,7 @@ function batwid.create ()
 
    arc:connect_signal("button::press",
       function (_, _, button)
-         powmenu:toggle()
+         power_menu:toggle()
       end
    )
 

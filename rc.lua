@@ -11,8 +11,7 @@ awful.layout.layouts = { awful.layout.suit.tile, awful.layout.suit.tile.bottom, 
 
 require("awful.autofocus")
 local beautiful = require("beautiful")
-local menubar = require("menubar")
-local hotkeys_popup = require("awful.hotkeys_popup").widget
+
 local wibox = require("wibox")
 local naughty = require("naughty")
 
@@ -29,7 +28,7 @@ local bar = require("bar")
 require("savefloats")
 
 local color = require("color")
-local main_color = "#635d6c"
+local main_color = "#665"
 
 local function is_floating (c)
    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
@@ -60,17 +59,19 @@ beautiful.border_width = 2
 
 terminal = "urxvt"
 editor_cmd = os.getenv("VISUAL") or (terminal .. " -e " .. (os.getenv("EDITOR") or "nano"))
-menubar.utils.terminal = terminal
 
 local function set_wallpaper(s)
    gears.wallpaper.set {
       type = "linear",
-      from = {s.geometry.x, s.geometry.y + s.geometry.height/2},
-      to = {s.geometry.x + s.geometry.width, s.geometry.y},
+--      from = {s.geometry.x, s.geometry.y + s.geometry.height/2},
+--      to = {s.geometry.x + s.geometry.width, s.geometry.y},
+      from = {s.geometry.x, s.geometry.y},
+      to = {s.geometry.width + s.geometry.x, s.geometry.height + s.geometry.y},
+
       stops = {
-         {0, color.shift(main_color,   0.1, 0, -0.01)},
-         {0.4, color.shift(main_color, 0.1, 0, -0.05)},
-         {1, color.shift(main_color,   0.1, 0, -0.15)}}
+         {0, color.shift(main_color,   -0.05, 0, -0.01)},
+         {0.4, color.shift(main_color, 0.0, 0, -0.05)},
+         {1, color.shift(main_color,   0.05, 0, -0.15)}}
    }
 end
 

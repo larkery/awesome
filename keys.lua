@@ -17,6 +17,7 @@ function keys:define_global()
    local ks = gears.table.join(
       key({M, C}, "r", awesome.restart, {description = "restart awesome", group = "session"}),
       key({M},    "y", util.client_menu),
+      key({M},    "q", util.power_menu),
 
       key({M}, "h", util.narrow_master, {description = "narrow master", group = "layout"}),
       key({M}, "l", util.widen_master, {description = "widen master", group = "layout"}),

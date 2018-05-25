@@ -145,4 +145,18 @@ function util.client_menu()
    )
 end
 
+function util.power_menu()
+   local power_menu = awful.menu.new({
+      items = {
+        {"hibernate", util.exec("systemctl hibernate")},
+        {"suspend", util.exec("systemctl suspend")},
+        {"reboot", util.exec("systemctl reboot")},
+        {"poweroff", util.exec("systemctl poweroff")}
+      }
+   })
+
+
+   power_menu:toggle()
+end
+
 return util
