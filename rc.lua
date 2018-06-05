@@ -28,7 +28,7 @@ local bar = require("bar")
 require("savefloats")
 
 local color = require("color")
-local main_color = "#665"
+local main_color = "#666655"
 
 local function is_floating (c)
    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
