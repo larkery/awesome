@@ -17,6 +17,11 @@ function util.minimize (c)
    end
 end
 
+function util.unminimize ()
+   local c = awful.client.restore()
+   if c then client.focus = c end
+end
+
 function util.focus_prev () awful.client.focus.byidx(-1) end
 function util.focus_next () awful.client.focus.byidx(1) end
 function util.swap_prev  () awful.client.swap.byidx(-1) end

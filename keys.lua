@@ -5,6 +5,10 @@ local xtags = require("xtags")
 
 local restore_float = require("savefloats")
 
+local cyclefocus = require("cyclefocus")
+
+cyclefocus.cycle_filters = {}
+
 local M = "Mod4"
 local C = "Control"
 local A = "Mod1"
@@ -16,8 +20,12 @@ local key = awful.key
 function keys:define_global()
    local ks = gears.table.join(
       key({M, C}, "r", awesome.restart, {description = "restart awesome", group = "session"}),
-      key({M},    "y", util.client_menu),
+      key({M},    "a", util.unminimize),
       key({M},    "q", util.power_menu),
+
+      key({M},    "y", function() cyclefocus.cycle({show_clients=false, focus_clients=false, modifier="Super_L", cycle_filters = {cyclefocus.filters.same_screen, cyclefocus.filters.common_tag, function(c, source_c) return c.minimized end}, keys = {"y", "u"}}) end),
+
+      key({M},    "i", function() cyclefocus.cycle({show_clients=false, focus_clients=false, modifier="Super_L", cycle_filters = {}, keys = {"i", "u"}}) end),
 
       key({M}, "h", util.narrow_master, {description = "narrow master", group = "layout"}),
       key({M}, "l", util.widen_master, {description = "widen master", group = "layout"}),
